@@ -66,10 +66,9 @@ cd C:\Projetos\SaudeIA
 .\.venv\Scripts\Activate.ps1
 python -c "import pandas, sklearn, xgboost; print('Bibliotecas de ML disponíveis')"
 Test-Path .\dados\processados\dataset_limpo.csv
-Test-Path .\dataset_limpo.csv
 ```
 
-Pelo menos um dos dois caminhos do CSV deve existir. O primeiro é a saída tratada da Aula 01; o segundo é a localização da versão original do SaudeIA. O conjunto precisa conter as colunas `sintomas` e `diagnostico`.
+O último comando deve retornar `True`. O arquivo `dados/processados/dataset_limpo.csv`, produzido na Aula 01, deve conter as colunas `sintomas` e `diagnostico`. Não é necessário copiá-lo para a raiz do projeto.
 
 **Por que utilizaremos três módulos?** `datasetService.py` lê os registros; `vetorizacaoService.py` transforma textos e classes em números; `treinamentoService.py` separa os dados, treina o XGBoost e calcula a acurácia. Essa divisão facilita a manutenção do programa.
 
@@ -77,7 +76,7 @@ Pelo menos um dos dois caminhos do CSV deve existir. O primeiro é a saída trat
 
 ### 6.1. Leitura do dataset — `services/datasetService.py`
 
-**O que faz?** Carrega os textos e seus rótulos. Antes de treinar, remove valores vazios e registros exatamente repetidos para reduzir o risco de um mesmo exemplo aparecer no treino e no teste. Não altera o CSV no disco.
+**O que faz?** Lê `dados/processados/dataset_limpo.csv`, remove linhas com valores ausentes e converte as colunas de texto para `str`. Não altera o CSV no disco. **Esta implementação não elimina duplicatas**: a verificação de exemplos repetidos deve ser feita na preparação dos dados (Aula 01) e pode ser reforçada em melhorias futuras.
 
 No terminal, crie o arquivo **somente se ainda não existir** e abra-o:
 
@@ -90,63 +89,52 @@ code .\services\datasetService.py
 **Copie todo o código abaixo para `services/datasetService.py` e salve com Ctrl+S.** Se já houver código, faça uma cópia de segurança antes de substituí-lo.
 
 ```python
-"""Leitura e verificação dos dados para treinamento do SaudeIA."""
 from pathlib import Path
+
 import pandas as pd
 
-# Pasta raiz do projeto: C:\Projetos\SaudeIA.
-RAIZ = Path(__file__).resolve().parents[1]
 
+# =====================================
+# Dataset completo carregado do CSV limpo
+# =====================================
 
 def dataset_completo():
-    """Devolve um DataFrame com sintomas e diagnóstico, sem duplicatas exatas."""
-    # Prioriza o CSV tratado na Aula 01; aceita a localização original.
-    candidatos = [
-        RAIZ / "dados" / "processados" / "dataset_limpo.csv",
-        RAIZ / "dataset_limpo.csv",
-    ]
-    caminho = next((p for p in candidatos if p.is_file()), None)
-    if caminho is None:
-        raise FileNotFoundError("dataset_limpo.csv não encontrado no projeto")
+    """
+    Carrega o dataset limpo a partir do arquivo CSV
+    e retorna um DataFrame Pandas pronto para vetorização.
+    """
 
-    df = pd.read_csv(caminho, encoding="utf-8")
-    if not {"sintomas", "diagnostico"}.issubset(df.columns):
-        raise ValueError("O CSV precisa ter as colunas sintomas e diagnostico")
+    # Arquivo gerado pelo limpar_excel.py
+    raiz_projeto = Path(__file__).resolve().parents[1]
+    arquivo = raiz_projeto / "dados" / "processados" / "dataset_limpo.csv"
 
-    df = df[["sintomas", "diagnostico"]].dropna().copy()
-    df["sintomas"] = df["sintomas"].astype(str).str.strip()
-    df["diagnostico"] = df["diagnostico"].astype(str).str.strip()
-    df = df[(df["sintomas"] != "") & (df["diagnostico"] != "")]
-    df = df.drop_duplicates(subset=["sintomas", "diagnostico"])
+    if not arquivo.is_file():
+        raise FileNotFoundError(f"Dataset não encontrado: {arquivo}")
 
-    # Uma frase idêntica não deve corresponder a rótulos conflitantes.
-    if df["sintomas"].duplicated().any():
-        raise ValueError("Há sintomas idênticos com diagnósticos diferentes")
-    if df["diagnostico"].nunique() < 2:
-        raise ValueError("O treinamento requer pelo menos duas classes")
-    return df.reset_index(drop=True)
+    # Lê o CSV
+    df = pd.read_csv(arquivo)
 
+    # Segurança: garante que não existem linhas vazias
+    df = df.dropna()
 
-def main():
-    df = dataset_completo()
-    print("Registros disponíveis:", len(df))
-    print("Classes:", df["diagnostico"].nunique())
-    print(df.head())
+    # Converte tudo para string (evita erros no TF-IDF)
+    df["sintomas"] = df["sintomas"].astype(str)
+    df["diagnostico"] = df["diagnostico"].astype(str)
 
-
-if __name__ == "__main__":
-    main()
+    return df
 ```
 
-Teste a leitura:
+Teste a leitura (o serviço atual não possui execução direta por `-m`):
 
 ```powershell
-python -m services.datasetService
+python -c "from services.datasetService import dataset_completo; df = dataset_completo(); print(df.shape); print(df.columns.tolist())"
 ```
+
+**Resultado observado no projeto validado:** `(228, 2)` e `['sintomas', 'diagnostico']`.
 
 ### 6.2. Vetorização e codificação — `services/vetorizacaoService.py`
 
-**O que faz?** O TF-IDF aprende um vocabulário com `fit_transform()` e transforma textos novos com `transform()`. O LabelEncoder converte nomes de classes em números. **Nesta versão, não ajustaremos o TF-IDF antes de dividir treino e teste.**
+**O que faz?** O TF-IDF aprende um vocabulário com `fit_transform()` e transforma textos novos com `transform()`. O LabelEncoder converte nomes de classes em números. As funções `criar_vetorizador(textos_treino, textos_teste)` e `criar_encoderY(diagnosticos)` **exigem os argumentos**; não existem parâmetros opcionais na implementação atual. **Não ajustaremos o TF-IDF antes de dividir treino e teste.**
 
 ```powershell
 if (-not (Test-Path .\services\vetorizacaoService.py)) { New-Item -ItemType File .\services\vetorizacaoService.py | Out-Null }
@@ -156,55 +144,45 @@ code .\services\vetorizacaoService.py
 **Copie o código abaixo para `services/vetorizacaoService.py` e salve.** Preserve uma cópia do conteúdo anterior, se existir.
 
 ```python
-"""Transformação de textos e codificação das classes do SaudeIA."""
+"""Vetorização TF-IDF e codificação dos diagnósticos do SaudeIA."""
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
-from services.datasetService import dataset_completo
 
 
-def criar_vetorizador(textos_treino, textos_teste=None):
-    """Aprende TF-IDF somente no treino e transforma o teste sem reajuste."""
+def criar_vetorizador(textos_treino, textos_teste):
+    """
+    Ajusta o TF-IDF apenas nos textos de treinamento.
+
+    Retorna:
+        tfidf: vetorizador ajustado;
+        X_treino: matriz dos textos de treinamento;
+        X_teste: matriz dos textos de teste.
+    """
     tfidf = TfidfVectorizer()
+
+    # Aprende o vocabulário exclusivamente com o treinamento.
     X_treino = tfidf.fit_transform(textos_treino)
-    if textos_teste is None:
-        return tfidf, X_treino
+
+    # Reutiliza o vocabulário sem aprender palavras novas.
     X_teste = tfidf.transform(textos_teste)
+
     return tfidf, X_treino, X_teste
 
 
-def criar_encoderY(rotulos=None):
-    """Codifica os nomes das classes; aceita os rótulos fornecidos."""
-    if rotulos is None:
-        rotulos = dataset_completo()["diagnostico"]
+def criar_encoderY(diagnosticos):
+    """
+    Converte os diagnósticos em rótulos numéricos.
+
+    Retorna o codificador ajustado e os rótulos codificados.
+    """
     encoder = LabelEncoder()
-    Y = encoder.fit_transform(rotulos)
-    return encoder, Y
+    y = encoder.fit_transform(diagnosticos)
 
-
-def main():
-    # Demonstra o serviço sem usar os dados de teste para ajustar o TF-IDF.
-    from sklearn.model_selection import train_test_split
-    df = dataset_completo()
-    treino, teste = train_test_split(
-        df["sintomas"], test_size=0.30, random_state=42
-    )
-    tfidf, X_treino, X_teste = criar_vetorizador(treino, teste)
-    encoder, Y = criar_encoderY(df["diagnostico"])
-    print("Matriz de treino:", X_treino.shape)
-    print("Matriz de teste:", X_teste.shape)
-    print("Classes:", len(encoder.classes_))
-    print("Rótulos codificados:", len(Y))
-
-
-if __name__ == "__main__":
-    main()
+    return encoder, y
 ```
 
-Execute:
-
-```powershell
-python -m services.vetorizacaoService
-```
+Teste as funções com os testes automatizados apresentados na Seção 9. O serviço de vetorização **não possui** bloco `main()` para execução com `python -m services.vetorizacaoService`.
 
 ### 6.3. Treinamento XGBoost — `services/treinamentoService.py`
 
@@ -219,32 +197,51 @@ code .\services\treinamentoService.py
 
 ```python
 """Treinamento e avaliação TF-IDF + XGBoost do SaudeIA."""
+
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from xgboost import XGBClassifier
+
 from services.datasetService import dataset_completo
 from services.vetorizacaoService import criar_vetorizador, criar_encoderY
 
 
 def treinar_modelo():
-    """Devolve modelo, tfidf, encoder, X_teste e Y_teste."""
+    """Treina o modelo e devolve os componentes e os dados de teste."""
+
+    # Carrega o conjunto de dados do projeto.
     df = dataset_completo()
+
     textos = df["sintomas"]
-    encoder, Y = criar_encoderY(df["diagnostico"])
+    diagnosticos = df["diagnostico"]
 
-    # Divisão ANTES de ajustar o TF-IDF: evita vazamento de vocabulário.
-    contagens = df["diagnostico"].value_counts()
+    # Verifica se há exemplos suficientes para a divisão estratificada.
+    contagens = diagnosticos.value_counts()
+
     if contagens.min() < 2:
-        raise ValueError("Cada classe precisa ter pelo menos dois registros")
-    X_treino_txt, X_teste_txt, Y_treino, Y_teste = train_test_split(
-        textos, Y, test_size=0.30, random_state=42, stratify=Y
+        raise ValueError(
+            "Cada classe precisa ter pelo menos dois registros"
+        )
+
+    # Transforma as classes em números.
+    encoder, y = criar_encoderY(diagnosticos)
+
+    # Divide os textos ANTES do ajuste do TF-IDF.
+    X_treino_txt, X_teste_txt, y_treino, y_teste = train_test_split(
+        textos,
+        y,
+        test_size=0.30,
+        random_state=42,
+        stratify=y,
     )
 
-    # fit_transform apenas no treino; transform apenas no teste.
+    # Aprende o vocabulário somente com os dados de treinamento.
     tfidf, X_treino, X_teste = criar_vetorizador(
-        X_treino_txt, X_teste_txt
+        X_treino_txt,
+        X_teste_txt,
     )
 
+    # Configura o classificador XGBoost.
     modelo = XGBClassifier(
         n_estimators=150,
         learning_rate=0.03,
@@ -253,30 +250,50 @@ def treinar_modelo():
         eval_metric="mlogloss",
         n_jobs=2,
     )
-    modelo.fit(X_treino, Y_treino)
-    return modelo, tfidf, encoder, X_teste, Y_teste
+
+    # Treina o modelo.
+    modelo.fit(X_treino, y_treino)
+
+    return modelo, tfidf, encoder, X_teste, y_teste
 
 
 def acuracia_modelo():
-    """Calcula a porcentagem de acertos nos registros reservados."""
-    modelo, _, _, X_teste, Y_teste = treinar_modelo()
-    Y_previsto = modelo.predict(X_teste)
-    return accuracy_score(Y_teste, Y_previsto) * 100
+    """Retorna a acurácia percentual do modelo."""
+
+    modelo, _, _, X_teste, y_teste = treinar_modelo()
+
+    y_previsto = modelo.predict(X_teste)
+
+    return accuracy_score(y_teste, y_previsto) * 100
 
 
 def main():
-    modelo, tfidf, encoder, X_teste, Y_teste = treinar_modelo()
-    Y_previsto = modelo.predict(X_teste)
-    print("=== SAUDEIA — TREINAMENTO TF-IDF + XGBOOST ===")
-    print("Registros de teste:", len(Y_teste))
+    """Executa o treinamento e apresenta as métricas."""
+
+    modelo, tfidf, encoder, X_teste, y_teste = treinar_modelo()
+
+    y_previsto = modelo.predict(X_teste)
+
+    print("=== SAUDEIA - TREINAMENTO TF-IDF + XGBOOST ===")
+    print("Registros de teste:", len(y_teste))
     print("Classes:", len(encoder.classes_))
     print("Termos do vocabulário:", len(tfidf.get_feature_names_out()))
-    print("Acurácia:", round(accuracy_score(Y_teste, Y_previsto) * 100, 2), "%")
-    print(classification_report(
-        Y_teste, Y_previsto,
-        labels=list(range(len(encoder.classes_))),
-        target_names=encoder.classes_, zero_division=0,
-    ))
+
+    print(
+        "Acurácia:",
+        round(accuracy_score(y_teste, y_previsto) * 100, 2),
+        "%",
+    )
+
+    print(
+        classification_report(
+            y_teste,
+            y_previsto,
+            labels=list(range(len(encoder.classes_))),
+            target_names=encoder.classes_,
+            zero_division=0,
+        )
+    )
 
 
 if __name__ == "__main__":
@@ -291,20 +308,22 @@ No terminal, execute:
 python -m services.treinamentoService
 ```
 
-O programa deverá mostrar a quantidade de registros de teste, o número de classes, o tamanho do vocabulário e as métricas. **Não existe acurácia mínima garantida**: o resultado depende do dataset, da divisão e dos parâmetros escolhidos. Os objetos treinados ainda estão em memória; **na Aula 03**, serão gravados em `model/` com os nomes esperados pelo SaudeIA original.
+O programa deverá mostrar a quantidade de registros de teste, o número de classes, o tamanho do vocabulário e as métricas. **Na execução validada do projeto:** 228 registros totais, 69 de teste, 20 classes, 201 termos e **86,96% de acurácia (60 acertos em 69 casos)**. Esses valores são um registro da execução, não uma garantia para outros datasets ou ambientes. Os objetos treinados ainda estão em memória; **na Aula 03**, serão gravados em `model/` com os nomes esperados pelo SaudeIA original.
 
 ## 8. Interpretar os resultados
 
-A **acurácia** é a proporção de previsões corretas. A **precisão** mede quantas previsões de uma classe estavam corretas; a **revocação** mede quantos exemplos reais daquela classe foram identificados; o **F1** combina precisão e revocação. A **matriz de confusão** mostra os tipos de erro.
+A **acurácia** é a proporção de previsões corretas. A **precisão** mede quantas previsões de uma classe estavam corretas; a **revocação** mede quantos exemplos reais daquela classe foram identificados; o **F1** combina precisão e revocação. A **matriz de confusão** mostra os tipos de erro (não é impressa pelo script atual).
 
 <p align="center"><img src="../assets/diagramas/metricas-avaliacao.svg" alt="Métricas de avaliação" width="690"></p>
 <p align="center"><em>Figura 6 — As métricas revelam aspectos diferentes do desempenho do classificador.</em></p>
+
+**Leitura do relatório real:** a revocação de `fibromialgia` foi 0,25 (1 de 4 casos), e a de `febre_maculosa`, 0,33 (1 de 3). Por isso, 86,96% de acurácia global não significa bom desempenho em todas as classes.
 
 **Limitação didática:** textos muito semelhantes, mesmo sem serem duplicatas exatas, podem aparecer em treino e teste e inflar as métricas. Um desempenho elevado nesta base pequena **não demonstra validade clínica** nem garante generalização para dados reais.
 
 ## 9. Criar testes automatizados
 
-**Por que testar?** Precisamos verificar que a leitura remove duplicatas e, principalmente, que o TF-IDF **não aprende palavras exclusivas do conjunto de teste**.
+**Por que testar?** Precisamos verificar, principalmente, que o TF-IDF **não aprende palavras exclusivas do conjunto de teste** e que o codificador de rótulos funciona. Os três testes abaixo não validam a remoção de duplicatas pelo serviço de leitura.
 
 ```powershell
 New-Item -ItemType Directory -Force .\tests | Out-Null
@@ -359,17 +378,17 @@ Altere **apenas um parâmetro por vez** em `XGBClassifier`: por exemplo, `n_esti
 
 ## 11. Verificação final
 
-- [ ] O CSV tratado da Aula 01 ou o CSV original compatível foi encontrado.
+- [ ] O CSV tratado da Aula 01 foi encontrado em `dados/processados/`.
 - [ ] Os serviços executaram sem alterar o dataset.
 - [ ] O TF-IDF foi ajustado somente com dados de treino.
 - [ ] O XGBoost gerou previsões e métricas.
 - [ ] Os três testes automatizados passaram.
 - [ ] Consigo explicar a diferença entre treino e teste.
-- [ ] Consigo identificar vazamento pelo TF-IDF, por duplicatas ou por características que revelam o rótulo.
+- [ ] Consigo identificar vazamento pelo TF-IDF, por duplicatas ou por características que revelam o rótulo; sei que o serviço atual não remove duplicatas.
 - [ ] Sei explicar por que 70/30 não garante uma avaliação confiável.
 
 **Próxima aula:** persistência dos três componentes em `model/modelo_saudeIA.json`, `model/vetorizador_saudeIA.pkl` e `model/encoderY_saudeIA.pkl`; carregamento para novas previsões.
 
 ---
 
-© 2026 **Wilson Luciano** · Programação para Engenharia Mecânica · DMEC · UFS · SaudeIA — Inteligência Artificial Aplicada à Engenharia · Material didático · Versão 1.1 (em revisão)
+© 2026 **Wilson Luciano** · Programação para Engenharia Mecânica · DMEC · UFS · SaudeIA — Inteligência Artificial Aplicada à Engenharia · Material didático · Aula 02 — Versão 1.0

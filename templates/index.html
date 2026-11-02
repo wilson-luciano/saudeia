@@ -1,105 +1,132 @@
 <!doctype html>
-<html>
-  <head>
+<html lang="pt-BR">
+<head>
+    <!-- Define o conjunto de caracteres, incluindo acentos. -->
+    <meta charset="utf-8">
+    <!-- Ajusta a largura da página para celulares e tablets. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SaudeIA</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- CSS e favicon são servidos pela pasta static/ do FastAPI. -->
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/favicon.ico">
+</head>
+<body>
+    <!-- Agrupa todo o conteúdo visual da aplicação. -->
+    <main class="container">
+        <h2>🩺 SaudeIA</h2>
 
-    <link rel="stylesheet" href="/static/style.css" />
-    <link rel="icon" href="/static/favicon.ico" />
-  </head>
+        <!-- Jinja2: exibe o erro somente quando o backend envia 'erro'. -->
+        {% if erro %}
+        <div class="resultado erro" role="alert">{{ erro }}</div>
+        {% endif %}
 
-  <body>
-    <div class="container">
-      <h2>🩺 SaudeIA</h2>
+        <!-- FORMULÁRIO DE CLASSIFICAÇÃO: POST /diagnosticar. -->
+        <form action="/diagnosticar" method="post">
+            <!-- O atributo name identifica o campo recebido por Form(). -->
+            <label for="sintomas">Descrição fictícia dos sintomas</label>
+            <textarea id="sintomas" name="sintomas"
+                      placeholder="Digite os sintomas fictícios...">{{ sintomas or '' }}</textarea>
+            <button type="submit">Diagnosticar</button>
+        </form>
 
-      <!-- ERRO DE VALIDAÇÃO -->
-      {% if erro %}
-      <div class="resultado" style="color: red">{{ erro }}</div>
-      {% endif %}
+        <!-- Link GET / limpa o formulário; evita um botão dentro de <a>. -->
+        <a class="botao botao-secundario" href="/">Limpar</a>
 
-      <!-- FORMULÁRIO PRINCIPAL -->
-      <form action="/diagnosticar" method="post">
-        <textarea name="sintomas" placeholder="Digite os sintomas...">
-{{ sintomas }}</textarea
-        >
+        <!-- RESULTADO LOCAL: valores fornecidos por ia.prever(). -->
+        {% if doenca %}
+        <section class="resultado" aria-label="Resultado da classificação">
+            <h3>🩺 Classificação experimental</h3>
+            <h2>{{ doenca }}</h2>
+            <!-- prob pode ser string vazia quando uma rota de chat renderiza a página. -->
+            {% if prob is defined and prob != '' and prob is not none %}
+            <p><strong>Confiança do classificador:</strong> {{ prob }} %</p>
+            {% endif %}
+            <p class="aviso-curto">Resultado didático; não constitui diagnóstico médico.</p>
+        </section>
+        {% endif %}
 
-        <button type="submit">Diagnosticar</button>
+        <!-- Assistente simples: disponível após a classificação experimental. -->
+        {% if doenca %}
+        <hr>
+        <!-- ASSISTENTE SIMPLES: cada pergunta é independente. -->
+        <h3>💬 Converse com o Assistente</h3>
+        <form action="/chat" method="post">
+            <!-- Envia a classificação atual junto da pergunta. -->
+            <input type="hidden" name="doenca" value="{{ doenca }}">
+            <label for="pergunta-simples">Pergunta ao assistente</label>
+            <textarea id="pergunta-simples" name="pergunta" maxlength="1000"
+                      placeholder="Digite sua dúvida..." required></textarea>
+            <button type="submit">Perguntar (Simples)</button>
+        </form>
+        <!-- A rota /chat envia apenas a resposta atual como 'resposta'. -->
+        {% if resposta %}
+        <div class="resultado" aria-live="polite">{{ resposta }}</div>
+        {% endif %}
 
-        <a href="/"> <button type="button">Limpar</button></a>
-      </form>
+        {% endif %}
 
-      <!-- RESULTADO DO DIAGNÓSTICO -->
-      {% if doenca %}
-      <div class="resultado">
-        <h3>🩺 Diagnóstico</h3>
-        <h2>{{ doenca }}</h2>
-        <b>Confiança:</b> {{ prob }} %
-      </div>
-      {% endif %}
+        <!-- O chat continua visível após Nova conversa, mesmo sem classificação. -->
+        {% if doenca or aviso_conversa or historico_agente is defined %}
+        <hr>
+        <!-- CHAT CONTÍNUO: o histórico e a próxima pergunta ficam juntos. -->
+        <section class="secao-agente" id="conversa-agente" aria-label="Agente de IA">
+            <h3>🤖 Agente de IA — Conversa contínua</h3>
+            <p class="aviso-curto">Respostas educativas; classificação experimental não é diagnóstico.</p>
+            {% if aviso_conversa %}
+            <div class="resultado aviso-conversa" role="status">{{ aviso_conversa }}</div>
+            {% endif %}
+            {% if erro_agente %}
+            <div class="resultado erro" role="alert">{{ erro_agente }}</div>
+            {% endif %}
+            <div class="chat-box" id="historico-agente" aria-label="Histórico da conversa" aria-live="polite">
+                <h3>Histórico da conversa</h3>
+                {% if historico_agente %}
+                    {% for mensagem in historico_agente %}
+                        {% if mensagem.role == 'user' %}
+                        <div class="chat-user"><strong>Você:</strong><p>{{ mensagem.content }}</p></div>
+                        {% else %}
+                        <div class="chat-agent"><strong>Agente:</strong><p>{{ mensagem.content }}</p></div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="chat-vazio">Faça a primeira pergunta para iniciar o diálogo.</p>
+                {% endif %}
+            </div>
+            <!-- Formulário permanece visível abaixo das mensagens. -->
+            <form action="/chat_agente" method="post" class="form-chat">
+                <input type="hidden" name="doenca" value="{{ doenca }}">
+                <label for="pergunta-agente">Próxima pergunta ao agente</label>
+                <textarea id="pergunta-agente" name="pergunta" maxlength="1000" rows="3"
+                          placeholder="Digite sua próxima pergunta..." required></textarea>
+                <button type="submit">Enviar pergunta</button>
+            </form>
+            <!-- Nova conversa não volta à página inicial. -->
+            <form action="/nova_conversa" method="post" class="form-nova-conversa">
+                <input type="hidden" name="doenca" value="{{ doenca }}">
+                <button type="submit" class="botao-nova-conversa">Nova conversa</button>
+            </form>
+        </section>
+        <script>
+            // Após renderizar, rola o histórico para a última mensagem.
+            const historico = document.getElementById("historico-agente");
+            if (historico) historico.scrollTop = historico.scrollHeight;
+        </script>
+        {% endif %}
 
-      <!-- ASSISTENTE E AGENTE -->
-      {% if doenca %}
+        <!-- AVISO OBRIGATÓRIO SOBRE O CARÁTER EDUCACIONAL. -->
+        <hr>
+        <p class="aviso-legal">
+            ⚠️ Este sistema é educacional e não substitui avaliação médica!
+            Utilize somente dados fictícios.
+        </p>
 
-      <hr />
-
-      <!-- ASSISTENTE SIMPLES -->
-      <h3>💬 Converse com o Assistente</h3>
-
-      <form action="/chat" method="post">
-        <input type="hidden" name="doenca" value="{{ doenca }}" />
-
-        <textarea name="pergunta" placeholder="Digite sua dúvida..."></textarea>
-
-        <button type="submit">Perguntar (Simples)</button>
-      </form>
-
-      {% if resposta %}
-      <div class="resultado">{{ resposta }}</div>
-      {% endif %}
-
-      <hr />
-
-      <!-- AGENTE DE IA (BATE-PAPO) -->
-      <h3>🤖 Agente de IA</h3>
-
-      <form action="/chat_agente" method="post">
-        <input type="hidden" name="doenca" value="{{ doenca }}" />
-
-        <textarea
-          name="pergunta"
-          placeholder="Pergunte ao agente..."
-        ></textarea>
-
-        <button type="submit">Perguntar ao Agente</button>
-      </form>
-
-      {% if ultima_pergunta and ultima_resposta %}
-      <div class="resultado">
-        <b>Você:</b> {{ ultima_pergunta }}<br /><br />
-        <b>Agente:</b> {{ ultima_resposta }}
-      </div>
-      {% endif %} {% endif %}
-
-      <!-- AVISO LEGAL -->
-      <hr />
-
-      <p
-        style="
-          margin-top: 20px;
-          font-size: 12px;
-          color: gray;
-          text-align: center;
-        "
-      >
-        ⚠️ Este sistema é educacional e não substitui avaliação médica!
-      </p>
-
-      <!-- QR CODE -->
-      <div style="text-align: center; margin-bottom: 15px">
-        <img src="/static/qrcode.png" width="160" />
-        <p style="font-size: 12px">Aponte a câmera do celular</p>
-      </div>
-    </div>
-  </body>
+        <!-- QR Code gerado pelo backend para acesso na mesma rede local. -->
+        <div class="qr-code">
+            <img src="/static/qrcode.png" width="160"
+                 alt="QR Code para acessar o SaudeIA pela rede local">
+            <p>Aponte a câmera do celular</p>
+        </div>
+    </main>
+</body>
 </html>

@@ -1,146 +1,206 @@
 /* ==============================
    RESET BÁSICO
+   Remove margens padrão e facilita o cálculo das larguras.
    ============================== */
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 /* ==============================
-   BODY
+   BODY: aparência geral da página.
    ============================== */
 body {
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f2f5f9;
-  padding: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f2f5f9;
+    padding: 10px;
+    color: #263238;
 }
 
 /* ==============================
    CONTAINER PRINCIPAL
+   Limita a largura para facilitar a leitura.
    ============================== */
 .container {
-  max-width: 500px;
-  width: 100%;
-  margin: 40px auto;
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* ==============================
-   TÍTULOS
-   ============================== */
+/* Títulos e separadores das seções. */
 h2 {
-  text-align: center;
-  margin-bottom: 20px;
+    text-align: center;
+    margin-bottom: 20px;
 }
-
 h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+hr {
+    margin-top: 20px;
+    border: 0;
+    border-top: 1px solid #dce3e9;
+}
+label {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
 }
 
 /* ==============================
-   TEXTAREA
+   TEXTAREA: entrada de texto multilinha.
    ============================== */
 textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  resize: vertical;
-  font-size: 14px;
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font: inherit;
+    font-size: 14px;
 }
 
 /* ==============================
-   BOTÕES
+   BOTÕES E LINK COM APARÊNCIA DE BOTÃO.
    ============================== */
-button {
-  margin-top: 12px;
-  width: 100%;
-  padding: 10px;
-  background: #0d6efd;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
+button, .botao {
+    display: block;
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
 }
-
-button:hover {
-  background: #0b5ed7;
+button:hover, .botao:hover {
+    background: #0b5ed7;
 }
-
-/* Botão secundário (Limpar) */
-a button {
-  background: #6c757d;
+.botao-secundario {
+    background: #6c757d;
 }
-
-a button:hover {
-  background: #5a6268;
+.botao-secundario:hover {
+    background: #5a6268;
 }
 
 /* ==============================
-   RESULTADO / CAIXAS
+   RESULTADO E AVISOS.
    ============================== */
 .resultado {
-  margin-top: 15px;
-  padding: 12px;
-  background: #e9ecef;
-  border-radius: 6px;
-  font-size: 14px;
+    margin-top: 15px;
+    padding: 12px;
+    background: #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+.resultado h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.erro {
+    color: #a61b1b;
+}
+.aviso-curto {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #555;
 }
 
 /* ==============================
-   CHAT (AGENTE DE IA)
+   CHAT: diferencia visualmente usuário e agente.
    ============================== */
 .chat-box {
-  margin-top: 15px;
+    margin-top: 15px;
 }
-
-/* Mensagem do usuário */
 .chat-user {
-  background: #e3f2fd;
-  padding: 10px;
-  margin: 6px 0;
-  border-radius: 10px;
-  font-size: 14px;
+    background: #e3f2fd;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
 }
-
-/* Mensagem do agente */
 .chat-agent {
-  background: #f1f8e9;
-  padding: 10px;
-  margin: 6px 0;
-  border-radius: 10px;
-  font-size: 14px;
+    background: #f1f8e9;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
 }
 
 /* ==============================
-   QR CODE
+   AVISO LEGAL E QR CODE.
    ============================== */
-img {
-  max-width: 100%;
+.aviso-legal {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+}
+.qr-code {
+    text-align: center;
+    margin: 20px 0 15px;
+}
+.qr-code img, img {
+    max-width: 100%;
+}
+.qr-code p {
+    font-size: 12px;
+    margin-top: 6px;
 }
 
 /* ==============================
-   RESPONSIVIDADE (CELULAR)
+   RESPONSIVIDADE: ajustes para celulares.
    ============================== */
 @media (max-width: 480px) {
-  .container {
-    margin: 20px auto;
-    padding: 20px;
-  }
+    .container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+    textarea {
+        min-height: 90px;
+    }
+    button, .botao {
+        font-size: 13px;
+    }
+}
+/* AULA 05: mantém quebras de linha e evita transbordamento de mensagens. */
+.chat-user, .chat-agent { overflow-wrap: anywhere; }
+.chat-user p, .chat-agent p { margin-top: 7px; white-space: pre-wrap; }
+/* Botão secundário separado do envio da pergunta. */
+.form-nova-conversa { margin-top: 12px; }
+.botao-nova-conversa { background: #526273; }
+.botao-nova-conversa:hover { background: #394957; }
+/* Avisos de falha e de validação acessíveis. */
+.resultado.erro { color: #8a251f; border-left: 4px solid #b9382e; }
 
-  textarea {
-    min-height: 90px;
-  }
-
-  button {
-    font-size: 13px;
-  }
+/* AULA 05: conversa contínua no mesmo painel. */
+.secao-agente { margin-top: 20px; }
+.chat-box { max-height: 380px; overflow-y: auto; padding: 10px;
+    border: 1px solid #dbe3eb; border-radius: 10px; background: #f8fafc; }
+.chat-user, .chat-agent { margin-top: 10px; margin-bottom: 10px; padding: 14px; line-height: 1.5; }
+.chat-user { margin-left: 10%; }
+.chat-agent { margin-right: 10%; }
+.chat-vazio { color: #536476; font-size: 14px; padding: 12px; }
+.form-chat { margin-top: 12px; }
+.form-chat textarea { min-height: 70px; }
+.aviso-conversa { border-left: 4px solid #2d8a66; }
+@media (max-width: 480px) {
+    .chat-user { margin-left: 5%; }
+    .chat-agent { margin-right: 5%; }
 }

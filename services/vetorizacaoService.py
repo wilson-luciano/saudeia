@@ -1,42 +1,36 @@
-"""Transformação de textos e codificação das classes do SaudeIA."""
+"""Vetorização TF-IDF e codificação dos diagnósticos do SaudeIA."""
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import LabelEncoder
-from services.datasetService import dataset_completo
 
 
-def criar_vetorizador(textos_treino, textos_teste=None):
-    """Aprende TF-IDF somente no treino e transforma o teste sem reajuste."""
+def criar_vetorizador(textos_treino, textos_teste):
+    """
+    Ajusta o TF-IDF apenas nos textos de treinamento.
+
+    Retorna:
+        tfidf: vetorizador ajustado;
+        X_treino: matriz dos textos de treinamento;
+        X_teste: matriz dos textos de teste.
+    """
     tfidf = TfidfVectorizer()
+
+    # Aprende o vocabulário exclusivamente com o treinamento.
     X_treino = tfidf.fit_transform(textos_treino)
-    if textos_teste is None:
-        return tfidf, X_treino
+
+    # Reutiliza o vocabulário sem aprender palavras novas.
     X_teste = tfidf.transform(textos_teste)
+
     return tfidf, X_treino, X_teste
 
 
-def criar_encoderY(rotulos=None):
-    """Codifica os nomes das classes; aceita os rótulos fornecidos."""
-    if rotulos is None:
-        rotulos = dataset_completo()["diagnostico"]
+def criar_encoderY(diagnosticos):
+    """
+    Converte os diagnósticos em rótulos numéricos.
+
+    Retorna o codificador ajustado e os rótulos codificados.
+    """
     encoder = LabelEncoder()
-    Y = encoder.fit_transform(rotulos)
-    return encoder, Y
+    y = encoder.fit_transform(diagnosticos)
 
-
-def main():
-    # Demonstra o serviço sem usar os dados de teste para ajustar o TF-IDF.
-    from sklearn.model_selection import train_test_split
-    df = dataset_completo()
-    treino, teste = train_test_split(
-        df["sintomas"], test_size=0.30, random_state=42
-    )
-    tfidf, X_treino, X_teste = criar_vetorizador(treino, teste)
-    encoder, Y = criar_encoderY(df["diagnostico"])
-    print("Matriz de treino:", X_treino.shape)
-    print("Matriz de teste:", X_teste.shape)
-    print("Classes:", len(encoder.classes_))
-    print("Rótulos codificados:", len(Y))
-
-
-if __name__ == "__main__":
-    main()
+    return encoder, y

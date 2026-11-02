@@ -191,7 +191,7 @@ import qrcode
 # HTTPException devolve erros HTTP controlados, como 422.
 from fastapi import FastAPI, Form, HTTPException, Request
 # HTMLResponse identifica rotas que devolvem páginas HTML.
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 # StaticFiles publica CSS, favicon e QR Code em /static.
 from fastapi.staticfiles import StaticFiles
 # Jinja2Templates renderiza index.html com valores enviados pelo Python.
@@ -225,7 +225,13 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 # A classificação local usa os três arquivos persistidos na Aula 03.
 # Instancia o classificador com os três artefatos já salvos; NÃO treina novamente.
 ia = DiagnosticoIA(str(BASE_DIR / "model"))
-chat_sessions = {}  # Memória temporária: perde-se ao reiniciar o servidor.
+# Armazenamento em RAM: demonstrativo, sem persistência entre reinícios.
+chat_sessions: dict[str, list[dict[str, str]]] = {}
+# Estado visual temporário associado à sessão, para a navegação POST/Redirect/GET.
+chat_views: dict[str, dict[str, str]] = {}
+MAX_MENSAGENS = 10  # Cinco pares pergunta/resposta, quando completos.
+MAX_PERGUNTA = 1000
+
 
 
 def descobrir_ip_local():
@@ -253,9 +259,47 @@ def criar_qrcode():
 criar_qrcode()
 
 
-def get_session_id(request: Request):
-    # Reaproveita o cookie existente; sem ele, gera uma nova sessão.
-    return request.cookies.get("session_id") or str(uuid.uuid4())
+def get_session_id(request: Request) -> str:
+    """Recupera o identificador do navegador ou cria um UUID novo."""
+    identificador = request.cookies.get("session_id", "")
+    try:
+        # Só aceita UUIDs válidos, evitando identificadores arbitrários.
+        return str(uuid.UUID(identificador))
+    except (ValueError, AttributeError, TypeError):
+        return str(uuid.uuid4())
+
+
+def instrucao_sistema(doenca: str) -> dict[str, str]:
+    """Define limites e contexto educacional da conversa."""
+    classificacao = doenca.strip()[:120] or "não informada"
+    return {
+        "role": "system",
+        "content": (
+            "Você é um assistente educacional sobre saúde. "
+            "Explique didaticamente sintomas, exames, prevenção e opções gerais de tratamento. "
+            "Ao perguntarem sobre tratamentos, descreva as abordagens habituais e seus objetivos. "
+            "A classificação é experimental e NÃO é diagnóstico: não pressuponha que "
+            "o usuário tenha a condição classificada. "
+            "Não prescreva medicamentos, doses nem condutas individualizadas. "
+            "Não solicite dados pessoais. Em situações urgentes, recomende atendimento médico. "
+            f"Classificação experimental atual: {classificacao}."
+        ),
+    }
+
+
+def limitar_historico(mensagens: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Preserva a instrução system e até dez mensagens recentes."""
+    return [mensagens[0]] + mensagens[1:][-MAX_MENSAGENS:]
+
+
+def mensagens_visiveis(mensagens: list[dict[str, str]]) -> list[dict[str, str]]:
+    """Não apresenta a instrução interna system na interface."""
+    return [m for m in mensagens if m["role"] in ("user", "assistant")]
+
+
+def contexto_pagina(request: Request, **dados):
+    """Renderiza a página mantendo os valores recebidos do backend."""
+    return templates.TemplateResponse(request=request, name="index.html", context=dados)
 
 
 # GET /: exibe a página inicial sem enviar dados para classificação.
@@ -263,6 +307,16 @@ def get_session_id(request: Request):
 async def home(request: Request):
     # Sintaxe atual do Starlette: request e name são argumentos nomeados.
     return templates.TemplateResponse(request=request, name="index.html")
+
+
+# Compatibilidade de navegação: GET não deve executar operações de POST.
+# O redirecionamento evita 405 em links ou histórico do navegador,
+# mas não implementa PRG para os formulários antigos.
+@app.get("/diagnosticar", include_in_schema=False)
+@app.get("/chat", include_in_schema=False)
+async def redirecionar_formularios_antigos():
+    """Redireciona acessos GET às rotas de processamento para a página inicial."""
+    return RedirectResponse(url="/", status_code=303)
 
 
 # POST /diagnosticar: recebe o campo "sintomas" do formulário HTML.
@@ -302,12 +356,16 @@ async def diagnosticar(request: Request, sintomas: str = Form("")):
 
 # Assistente simples: cada pergunta é enviada sem histórico de mensagens anteriores.
 @app.post("/chat", response_class=HTMLResponse)
-async def chat(request: Request, pergunta: str = Form(...), doenca: str = Form(...)):
+async def chat(request: Request, pergunta: str = Form(""), doenca: str = Form("")):
+    if not pergunta.strip() or len(pergunta.strip()) > MAX_PERGUNTA:
+        return contexto_pagina(request, doenca=doenca, erro="Informe uma pergunta de até 1000 caracteres.")
     # Prompt: instruções que contextualizam a pergunta enviada ao LLM.
     prompt = (
         "Você é um assistente educacional sobre saúde. "
-        "Não confirme diagnósticos nem prescreva tratamentos. "
-        "Oriente a procurar profissionais habilitados. "
+        "Explique opções gerais de tratamento, prevenção e exames quando perguntado, "
+        "sem prescrever doses ou condutas individualizadas. "
+        "A classificação é experimental, não confirma diagnóstico. "
+        "Oriente a procurar profissionais habilitados para decisões clínicas. "
         f"Classificação do sistema: {doenca}. Pergunta: {pergunta}"
     )
     try:
@@ -329,43 +387,85 @@ async def chat(request: Request, pergunta: str = Form(...), doenca: str = Form(.
     )
 
 
-# Agente: envia mensagens anteriores para manter o contexto da conversa.
-@app.post("/chat_agente", response_class=HTMLResponse)
-async def chat_agente(request: Request, pergunta: str = Form(...), doenca: str = Form(...)):
-    # Um cookie identifica o histórico da conversa deste navegador.
+# A rota GET é a única responsável por apresentar o histórico após um POST.
+@app.get("/conversa", response_class=HTMLResponse)
+async def ver_conversa(request: Request):
+    """Mostra a conversa existente; atualizar esta URL nunca reenvia o POST."""
     session_id = get_session_id(request)
-    # Cria uma instrução "system" quando a sessão ainda não existe.
-    if session_id not in chat_sessions:
-        chat_sessions[session_id] = [{
-            "role": "system",
-            "content": (
-                "Você é um agente conversacional educacional sobre saúde. "
-                f"Contexto: {doenca}. Não confirme diagnósticos nem prescreva tratamentos. "
-                "Oriente a procurar avaliação profissional."
-            ),
-        }]
-    historico = chat_sessions[session_id]
-    # Acrescenta a pergunta atual à sequência de mensagens.
-    historico.append({"role": "user", "content": pergunta})
-    # Mantém instrução system e até dez mensagens recentes.
-    chat_sessions[session_id] = [historico[0]] + historico[1:][-10:]
-    try:
-        # O serviço separado chama a API externa e devolve a resposta textual.
-        agente = AgenteSaudeIA()
-        resposta = agente.perguntar_chat(chat_sessions[session_id])
-        # Salva a resposta para que a próxima pergunta tenha contexto.
-        chat_sessions[session_id].append({"role": "assistant", "content": resposta})
-    except Exception as erro:
-        # Falha da API não deve impedir o uso do classificador local.
-        print("Falha no agente:", type(erro).__name__, str(erro))
-        resposta = "⚠️ Agente indisponível. Verifique a chave, a conexão e o faturamento da API."
-    # Renderiza a página com a pergunta e a resposta da sessão atual.
-    pagina = templates.TemplateResponse(
-        request=request, name="index.html",
-        context={"doenca": doenca, "ultima_pergunta": pergunta, "ultima_resposta": resposta},
+    estado = chat_views.get(session_id, {})
+    historico = chat_sessions.get(session_id, [])
+    pagina = contexto_pagina(
+        request,
+        doenca=estado.get("doenca", ""),
+        historico_agente=mensagens_visiveis(historico),
+        erro_agente=estado.get("erro_agente"),
+        aviso_conversa=estado.get("aviso_conversa"),
     )
-    # Cookie HTTP mantém a sessão entre requisições; não guarda a chave da API.
     pagina.set_cookie("session_id", session_id, httponly=True, samesite="lax")
+    return pagina
+
+
+# Compatibilidade com links antigos: GET não altera a memória.
+@app.get("/chat_agente")
+@app.get("/nova_conversa")
+async def redirecionar_links_antigos():
+    return RedirectResponse(url="/conversa#conversa-agente", status_code=303)
+
+
+# POST processa e armazena; depois redireciona para GET /conversa.
+@app.post("/chat_agente")
+async def chat_agente(
+    request: Request,
+    pergunta: str = Form(""),
+    doenca: str = Form(""),
+):
+    session_id = get_session_id(request)
+    pergunta = pergunta.strip()
+    doenca = doenca.strip()[:120]
+
+    if session_id not in chat_sessions:
+        chat_sessions[session_id] = [instrucao_sistema(doenca)]
+    historico = chat_sessions[session_id]
+    nova_instrucao = instrucao_sistema(doenca)
+    if historico[0] != nova_instrucao:
+        historico = [nova_instrucao]
+        chat_sessions[session_id] = historico
+
+    erro_agente = ""
+    if not pergunta or len(pergunta) > MAX_PERGUNTA:
+        erro_agente = f"Digite uma pergunta com 1 a {MAX_PERGUNTA} caracteres."
+    else:
+        tentativa = limitar_historico(historico + [{"role": "user", "content": pergunta}])
+        try:
+            resposta = AgenteSaudeIA().perguntar_chat(tentativa)
+            if not isinstance(resposta, str) or not resposta.strip():
+                raise ValueError("Resposta textual vazia")
+            chat_sessions[session_id] = limitar_historico(
+                tentativa + [{"role": "assistant", "content": resposta}]
+            )
+        except Exception as erro:
+            print("Falha no agente:", type(erro).__name__)
+            erro_agente = "Agente indisponível. Verifique conexão, chave e créditos da API."
+
+    chat_views[session_id] = {"doenca": doenca, "erro_agente": erro_agente}
+    pagina = RedirectResponse(url="/conversa#conversa-agente", status_code=303)
+    pagina.set_cookie("session_id", session_id, httponly=True, samesite="lax")
+    return pagina
+
+
+@app.post("/nova_conversa")
+async def nova_conversa(request: Request, doenca: str = Form("")):
+    """Apaga o histórico anterior e inicia nova sessão sem sair do chat."""
+    session_id = get_session_id(request)
+    chat_sessions.pop(session_id, None)
+    chat_views.pop(session_id, None)
+    nova_sessao = str(uuid.uuid4())
+    chat_views[nova_sessao] = {
+        "doenca": doenca.strip()[:120],
+        "aviso_conversa": "Nova conversa iniciada. Digite sua pergunta abaixo.",
+    }
+    pagina = RedirectResponse(url="/conversa#conversa-agente", status_code=303)
+    pagina.set_cookie("session_id", nova_sessao, httponly=True, samesite="lax")
     return pagina
 
 
@@ -414,7 +514,7 @@ if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
 ```
 
-**Roteiro de leitura do `main_api.py`:** comece pelas importações e pelos caminhos (`BASE_DIR`); identifique a criação de `app`, o carregamento de `DiagnosticoIA` e a geração do QR Code. Em seguida, acompanhe `GET /`, `POST /diagnosticar`, os dois recursos de conversa e, por fim, as rotas JSON. Os comentários dentro do arquivo acompanham esse percurso.
+**Roteiro de leitura do `main_api.py`:** comece pelas importações e pelos caminhos (`BASE_DIR`); identifique a criação de `app`, o carregamento de `DiagnosticoIA` e a geração do QR Code. Em seguida, acompanhe `GET /`, `POST /diagnosticar`, `POST /chat`, o fluxo PRG das rotas `/chat_agente`, `/nova_conversa` e `/conversa` e, por fim, as rotas JSON. Os comentários dentro do arquivo acompanham esse percurso.
 
 **O que acontece ao clicar em Diagnosticar?** O navegador envia um `POST` contendo o texto dos sintomas. A função da rota valida a entrada, chama `ia.prever()`, grava o histórico em CSV e devolve a página com os valores no `context`. O arquivo de modelo é carregado para inferência; não é treinado novamente.
 
@@ -423,31 +523,432 @@ if __name__ == "__main__":
 ### 6.1. Principais rotas
 
 | Rota | Método | Função |
-|---|---|---|
-| `/` | GET | Exibe a interface original |
-| `/diagnosticar` | POST | Classifica sintomas fictícios e grava o CSV |
-| `/chat` | POST | Envia uma pergunta ao assistente simples |
-| `/chat_agente` | POST | Envia mensagens com histórico temporário |
-| `/api/saude` | GET | Confirma que o servidor responde |
+| --- | --- | --- |
+| `/` | GET | Exibe a interface principal |
+| `/diagnosticar` | POST | Classifica sintomas fictícios e registra o histórico CSV |
+| `/diagnosticar` | GET | Redireciona para `/` (HTTP 303) |
+| `/chat` | POST | Envia uma pergunta ao assistente simples, sem memória |
+| `/chat` | GET | Redireciona para `/` (HTTP 303) |
+| `/conversa` | GET | Exibe a conversa associada à sessão atual |
+| `/chat_agente` | POST | Processa a pergunta e redireciona para `/conversa` (HTTP 303) |
+| `/nova_conversa` | POST | Limpa a conversa da sessão e redireciona (HTTP 303) |
+| `/chat_agente` e `/nova_conversa` | GET | Redirecionam para `/conversa` (HTTP 303) |
+| `/api/saude` | GET | Verifica se o servidor responde |
 | `/api/prever` | POST | Recebe JSON e devolve a classificação |
-| `/docs` | GET | Documentação automática da FastAPI |
+| `/docs` | GET | Apresenta a documentação automática da API |
+
+### 6.2. Padrão POST/Redirect/GET (PRG)
+
+No agente, o navegador envia `POST /chat_agente`; o servidor processa a pergunta, atualiza o histórico da sessão e responde com **HTTP 303**, apontando para `GET /conversa`. A página de conversa é carregada por uma requisição GET. Assim, atualizar a página não reenvia o formulário anterior.
+
+O botão **Nova conversa** segue o mesmo padrão: `POST /nova_conversa` limpa o histórico da sessão e redireciona para `GET /conversa`. O histórico fica em memória no processo Python; reiniciar o servidor o apaga. A sessão é identificada por um cookie com identificador aleatório, não por dados pessoais.
+
+**Atenção:** `GET /diagnosticar` e `GET /chat` são atalhos de navegação para a página inicial; não executam classificação nem chamadas à IA. O método HTTP importa: `HEAD` não equivale a `GET`.
 
 **Por que o `TemplateResponse()` mudou?** Nas versões atuais do Starlette, a forma recomendada é nomear explicitamente `request` e `name`. O padrão antigo `TemplateResponse("index.html", {"request": request})` pode produzir erro HTTP 500 (`TypeError: unhashable type: 'dict'`).
 
-## 7. Interface HTML e CSS
+## 7. Interface HTML e CSS — códigos completos e comentados
 
-A interface utiliza os arquivos **`templates/index.html`** e **`static/style.css`**. O pacote desta aula inclui cópias dos arquivos originais em `codigo/templates/` e `codigo/static/`. Se eles já estiverem presentes e funcionando no projeto, **mantenha-os**; não é necessário reescrevê-los. O HTML original contém o formulário `/diagnosticar`, os formulários `/chat` e `/chat_agente`, o aviso didático e a imagem `/static/qrcode.png`.
+A interface utiliza **`templates/index.html`** (estrutura, formulários e variáveis Jinja2) e **`static/style.css`** (cores, espaçamentos e responsividade). Os dois arquivos são apresentados **integralmente**, para que o aluno possa copiar, colar e executar sem procurar trechos em aulas anteriores.
 
-Confira:
+**Integração dos formulários:** a classificação envia `sintomas` para `/diagnosticar`; o assistente simples envia `pergunta` e `doenca` para `/chat`; o agente utiliza `/chat_agente`, com visualização em `/conversa` e botão **Nova conversa** em `/nova_conversa`. Os nomes dos campos HTML devem coincidir com os parâmetros `Form()` do backend. A interface inclui o aviso educacional e o QR Code.
+
+### 7.1. Preparar e abrir os arquivos
+
+No PowerShell integrado ao VSCode:
 
 ```powershell
+# Execute a partir da raiz do SaudeIA.
+cd C:\Projetos\SaudeIA
+
+# Faça cópias de segurança antes de substituir arquivos existentes.
+Copy-Item .\templates\index.html .\templates\index_antes_revisao04.html
+Copy-Item .\static\style.css .\static\style_antes_revisao04.css
+
+# Abra os arquivos nos quais os códigos serão colados.
 code .\templates\index.html
 code .\static\style.css
 ```
 
-**Por que separar HTML, CSS e Python?** O HTML define a estrutura dos formulários, o CSS controla a apresentação e o Python executa a lógica. Essa separação facilita manutenção e testes.
+As cópias de segurança são locais e não devem ser incluídas no commit. Depois de validar o funcionamento, podem ser removidas. Para que não sejam adicionadas por engano ao Git, confira o `git status` antes do commit.
 
-**Integração Jinja2:** variáveis como `{{ doenca }}`, `{{ prob }}` e `{{ resposta }}` são substituídas pelos valores enviados em `context` pelo backend.
+### 7.2. HTML completo — `templates/index.html`
+
+**Substitua todo o conteúdo do arquivo pelo código abaixo.** Os comentários `<!-- ... -->` identificam os formulários, as variáveis Jinja2 e os elementos da página.
+
+```html
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <!-- Define o conjunto de caracteres, incluindo acentos. -->
+    <meta charset="utf-8">
+    <!-- Ajusta a largura da página para celulares e tablets. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaudeIA</title>
+
+    <!-- CSS e favicon são servidos pela pasta static/ do FastAPI. -->
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="/static/favicon.ico">
+</head>
+<body>
+    <!-- Agrupa todo o conteúdo visual da aplicação. -->
+    <main class="container">
+        <h2>🩺 SaudeIA</h2>
+
+        <!-- Jinja2: exibe o erro somente quando o backend envia 'erro'. -->
+        {% if erro %}
+        <div class="resultado erro" role="alert">{{ erro }}</div>
+        {% endif %}
+
+        <!-- FORMULÁRIO DE CLASSIFICAÇÃO: POST /diagnosticar. -->
+        <form action="/diagnosticar" method="post">
+            <!-- O atributo name identifica o campo recebido por Form(). -->
+            <label for="sintomas">Descrição fictícia dos sintomas</label>
+            <textarea id="sintomas" name="sintomas"
+                      placeholder="Digite os sintomas fictícios...">{{ sintomas or '' }}</textarea>
+            <button type="submit">Diagnosticar</button>
+        </form>
+
+        <!-- Link GET / limpa o formulário; evita um botão dentro de <a>. -->
+        <a class="botao botao-secundario" href="/">Limpar</a>
+
+        <!-- RESULTADO LOCAL: valores fornecidos por ia.prever(). -->
+        {% if doenca %}
+        <section class="resultado" aria-label="Resultado da classificação">
+            <h3>🩺 Classificação experimental</h3>
+            <h2>{{ doenca }}</h2>
+            <!-- prob pode ser string vazia quando uma rota de chat renderiza a página. -->
+            {% if prob is defined and prob != '' and prob is not none %}
+            <p><strong>Confiança do classificador:</strong> {{ prob }} %</p>
+            {% endif %}
+            <p class="aviso-curto">Resultado didático; não constitui diagnóstico médico.</p>
+        </section>
+        {% endif %}
+
+        <!-- Assistente simples: disponível após a classificação experimental. -->
+        {% if doenca %}
+        <hr>
+        <!-- ASSISTENTE SIMPLES: cada pergunta é independente. -->
+        <h3>💬 Converse com o Assistente</h3>
+        <form action="/chat" method="post">
+            <!-- Envia a classificação atual junto da pergunta. -->
+            <input type="hidden" name="doenca" value="{{ doenca }}">
+            <label for="pergunta-simples">Pergunta ao assistente</label>
+            <textarea id="pergunta-simples" name="pergunta" maxlength="1000"
+                      placeholder="Digite sua dúvida..." required></textarea>
+            <button type="submit">Perguntar (Simples)</button>
+        </form>
+        <!-- A rota /chat envia apenas a resposta atual como 'resposta'. -->
+        {% if resposta %}
+        <div class="resultado" aria-live="polite">{{ resposta }}</div>
+        {% endif %}
+
+        {% endif %}
+
+        <!-- O chat continua visível após Nova conversa, mesmo sem classificação. -->
+        {% if doenca or aviso_conversa or historico_agente is defined %}
+        <hr>
+        <!-- CHAT CONTÍNUO: o histórico e a próxima pergunta ficam juntos. -->
+        <section class="secao-agente" id="conversa-agente" aria-label="Agente de IA">
+            <h3>🤖 Agente de IA — Conversa contínua</h3>
+            <p class="aviso-curto">Respostas educativas; classificação experimental não é diagnóstico.</p>
+            {% if aviso_conversa %}
+            <div class="resultado aviso-conversa" role="status">{{ aviso_conversa }}</div>
+            {% endif %}
+            {% if erro_agente %}
+            <div class="resultado erro" role="alert">{{ erro_agente }}</div>
+            {% endif %}
+            <div class="chat-box" id="historico-agente" aria-label="Histórico da conversa" aria-live="polite">
+                <h3>Histórico da conversa</h3>
+                {% if historico_agente %}
+                    {% for mensagem in historico_agente %}
+                        {% if mensagem.role == 'user' %}
+                        <div class="chat-user"><strong>Você:</strong><p>{{ mensagem.content }}</p></div>
+                        {% else %}
+                        <div class="chat-agent"><strong>Agente:</strong><p>{{ mensagem.content }}</p></div>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="chat-vazio">Faça a primeira pergunta para iniciar o diálogo.</p>
+                {% endif %}
+            </div>
+            <!-- Formulário permanece visível abaixo das mensagens. -->
+            <form action="/chat_agente" method="post" class="form-chat">
+                <input type="hidden" name="doenca" value="{{ doenca }}">
+                <label for="pergunta-agente">Próxima pergunta ao agente</label>
+                <textarea id="pergunta-agente" name="pergunta" maxlength="1000" rows="3"
+                          placeholder="Digite sua próxima pergunta..." required></textarea>
+                <button type="submit">Enviar pergunta</button>
+            </form>
+            <!-- Nova conversa não volta à página inicial. -->
+            <form action="/nova_conversa" method="post" class="form-nova-conversa">
+                <input type="hidden" name="doenca" value="{{ doenca }}">
+                <button type="submit" class="botao-nova-conversa">Nova conversa</button>
+            </form>
+        </section>
+        <script>
+            // Após renderizar, rola o histórico para a última mensagem.
+            const historico = document.getElementById("historico-agente");
+            if (historico) historico.scrollTop = historico.scrollHeight;
+        </script>
+        {% endif %}
+
+        <!-- AVISO OBRIGATÓRIO SOBRE O CARÁTER EDUCACIONAL. -->
+        <hr>
+        <p class="aviso-legal">
+            ⚠️ Este sistema é educacional e não substitui avaliação médica!
+            Utilize somente dados fictícios.
+        </p>
+
+        <!-- QR Code gerado pelo backend para acesso na mesma rede local. -->
+        <div class="qr-code">
+            <img src="/static/qrcode.png" width="160"
+                 alt="QR Code para acessar o SaudeIA pela rede local">
+            <p>Aponte a câmera do celular</p>
+        </div>
+    </main>
+</body>
+</html>
+```
+
+**Entendendo o HTML:**
+
+- `action="/diagnosticar"` e `method="post"` enviam os sintomas ao FastAPI.
+- `name="sintomas"`, `name="pergunta"` e `name="doenca"` precisam corresponder aos parâmetros `Form()` do backend.
+- `{% if doenca %}` mostra os recursos de conversa somente quando há classificação disponível.
+- `{{ doenca }}`, `{{ prob }}` e `{{ resposta }}` são substituídos pelo Jinja2; o conteúdo textual é escapado, sem usar `|safe`.
+- O assistente simples mostra `resposta`, enquanto o agente apresenta `ultima_pergunta` e `ultima_resposta`.
+- A classificação exibida é **experimental**, não um diagnóstico clínico. O QR Code aponta para a rede local.
+
+### 7.3. CSS completo — `static/style.css`
+
+**Substitua todo o conteúdo do arquivo pelo código abaixo.** Os comentários `/* ... */` explicam cada grupo de estilos. Mantivemos a identidade visual simples do SaudeIA.
+
+```css
+/* ==============================
+   RESET BÁSICO
+   Remove margens padrão e facilita o cálculo das larguras.
+   ============================== */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* ==============================
+   BODY: aparência geral da página.
+   ============================== */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f2f5f9;
+    padding: 10px;
+    color: #263238;
+}
+
+/* ==============================
+   CONTAINER PRINCIPAL
+   Limita a largura para facilitar a leitura.
+   ============================== */
+.container {
+    max-width: 500px;
+    width: 100%;
+    margin: 40px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos e separadores das seções. */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+hr {
+    margin-top: 20px;
+    border: 0;
+    border-top: 1px solid #dce3e9;
+}
+label {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+}
+
+/* ==============================
+   TEXTAREA: entrada de texto multilinha.
+   ============================== */
+textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    font: inherit;
+    font-size: 14px;
+}
+
+/* ==============================
+   BOTÕES E LINK COM APARÊNCIA DE BOTÃO.
+   ============================== */
+button, .botao {
+    display: block;
+    margin-top: 12px;
+    width: 100%;
+    padding: 10px;
+    background: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+}
+button:hover, .botao:hover {
+    background: #0b5ed7;
+}
+.botao-secundario {
+    background: #6c757d;
+}
+.botao-secundario:hover {
+    background: #5a6268;
+}
+
+/* ==============================
+   RESULTADO E AVISOS.
+   ============================== */
+.resultado {
+    margin-top: 15px;
+    padding: 12px;
+    background: #e9ecef;
+    border-radius: 6px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+.resultado h2 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.erro {
+    color: #a61b1b;
+}
+.aviso-curto {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #555;
+}
+
+/* ==============================
+   CHAT: diferencia visualmente usuário e agente.
+   ============================== */
+.chat-box {
+    margin-top: 15px;
+}
+.chat-user {
+    background: #e3f2fd;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+.chat-agent {
+    background: #f1f8e9;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 10px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
+
+/* ==============================
+   AVISO LEGAL E QR CODE.
+   ============================== */
+.aviso-legal {
+    margin-top: 20px;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+}
+.qr-code {
+    text-align: center;
+    margin: 20px 0 15px;
+}
+.qr-code img, img {
+    max-width: 100%;
+}
+.qr-code p {
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+/* ==============================
+   RESPONSIVIDADE: ajustes para celulares.
+   ============================== */
+@media (max-width: 480px) {
+    .container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+    textarea {
+        min-height: 90px;
+    }
+    button, .botao {
+        font-size: 13px;
+    }
+}
+/* AULA 05: mantém quebras de linha e evita transbordamento de mensagens. */
+.chat-user, .chat-agent { overflow-wrap: anywhere; }
+.chat-user p, .chat-agent p { margin-top: 7px; white-space: pre-wrap; }
+/* Botão secundário separado do envio da pergunta. */
+.form-nova-conversa { margin-top: 12px; }
+.botao-nova-conversa { background: #526273; }
+.botao-nova-conversa:hover { background: #394957; }
+/* Avisos de falha e de validação acessíveis. */
+.resultado.erro { color: #8a251f; border-left: 4px solid #b9382e; }
+
+/* AULA 05: conversa contínua no mesmo painel. */
+.secao-agente { margin-top: 20px; }
+.chat-box { max-height: 380px; overflow-y: auto; padding: 10px;
+    border: 1px solid #dbe3eb; border-radius: 10px; background: #f8fafc; }
+.chat-user, .chat-agent { margin-top: 10px; margin-bottom: 10px; padding: 14px; line-height: 1.5; }
+.chat-user { margin-left: 10%; }
+.chat-agent { margin-right: 10%; }
+.chat-vazio { color: #536476; font-size: 14px; padding: 12px; }
+.form-chat { margin-top: 12px; }
+.form-chat textarea { min-height: 70px; }
+.aviso-conversa { border-left: 4px solid #2d8a66; }
+@media (max-width: 480px) {
+    .chat-user { margin-left: 5%; }
+    .chat-agent { margin-right: 5%; }
+}
+```
+
+**Entendendo o CSS:** `.container` controla a largura do painel; `textarea` estiliza a entrada de textos; `.resultado` destaca a classificação e as respostas; `.chat-user` e `.chat-agent` diferenciam as mensagens; `@media` adapta o layout a telas menores. Os seletores são usados diretamente no HTML acima.
+
+### 7.4. Verificar os arquivos
+
+Salve os dois arquivos com `Ctrl+S`. A seguir, execute:
+
+```powershell
+# Verifica se os arquivos estão no local correto.
+Test-Path .\templates\index.html
+Test-Path .\static\style.css
+
+# Confere se o Python consegue importar a aplicação.
+python -c "import main_api; print('FastAPI importado com sucesso')"
+```
+
+**Resultado esperado:** `True`, `True` e a mensagem de importação. O import carrega os modelos salvos da Aula 03; se estiverem ausentes, execute primeiro a etapa de persistência daquela aula.
 
 ## 8. Executar e acessar no computador
 
@@ -478,10 +979,10 @@ python -m uvicorn main_api:app --reload --host 0.0.0.0 --port 8000
 
 ### 9.1. Qual endereço abrir no navegador?
 
-| Onde acessar | Endereço correto |
-|---|---|
-| No próprio computador | http://127.0.0.1:8000 |
-| Alternativa no computador | http://localhost:8000 |
+| Onde acessar                            | Endereço correto               |
+| --------------------------------------- | ------------------------------ |
+| No próprio computador                   | http://127.0.0.1:8000          |
+| Alternativa no computador               | http://localhost:8000          |
 | No celular conectado à mesma rede Wi-Fi | `http://IP_DO_COMPUTADOR:8000` |
 
 **Exemplo:** se `ipconfig` mostrar IPv4 `192.168.15.41`, no celular abra `http://192.168.15.41:8000`. O IP do exemplo deve ser substituído pelo IP real do computador. O endereço `0.0.0.0` serve apenas para a configuração de escuta do servidor.
@@ -494,11 +995,10 @@ python -m uvicorn main_api:app --reload --host 0.0.0.0 --port 8000
 
 **API x página HTML:** a página web foi feita para pessoas; a API JSON permite que outros programas enviem um texto e recebam um resultado estruturado. A FastAPI gera o Swagger automaticamente a partir das rotas e dos modelos Pydantic.
 
-
 No navegador, acesse http://127.0.0.1:8000/docs, localize **POST `/api/prever`**, clique em **Try it out** e envie:
 
 ```json
-{"texto": "febre e dor de cabeça"}
+{ "texto": "febre e dor de cabeça" }
 ```
 
 A resposta HTTP **200** terá `classe_prevista`, `confianca_percentual` e `aviso`. O esquema `SaidaPrevisao` declara os três campos para que apareçam tanto no **Schema/Example Value** do Swagger quanto no **Response body** de uma requisição real. A classe e a confiança dependem do modelo treinado.
@@ -612,27 +1112,44 @@ python -m pytest -q tests/test_api.py
 
 **Como ler os testes:** cada função `test_...` verifica uma situação. O `TestClient` simula requisições HTTP, `assert` compara o resultado com o esperado e `monkeypatch` substitui temporariamente a previsão real por um resultado conhecido, evitando que o teste dependa do comportamento estatístico do modelo. Os comentários dentro de `test_api.py` explicam essas operações.
 
-**Resultado esperado:** seis testes aprovados, desde que os três arquivos de modelo estejam presentes e a interface original esteja disponível. Os testes substituem a previsão por uma resposta simulada, mas ainda precisam importar o módulo `main_api.py`.
+**Resultado esperado:** os testes definidos no arquivo `tests/test_api.py` devem passar, desde que os três arquivos de modelo e os templates estejam presentes. Os testes substituem a previsão por uma resposta simulada, mas ainda precisam importar o módulo `main_api.py`.
+
+### 11.1. Verificação das rotas de navegação
+
+Com o servidor em execução, abra outro terminal PowerShell e execute:
+
+```powershell
+# O GET de uma rota originalmente POST deve redirecionar para a página inicial.
+curl.exe -s -o NUL -w "%{http_code} %{redirect_url}`n" http://127.0.0.1:8000/diagnosticar
+curl.exe -s -o NUL -w "%{http_code} %{redirect_url}`n" http://127.0.0.1:8000/chat
+
+# Verifica a página que apresenta a conversa.
+curl.exe -s -o NUL -w "%{http_code}`n" http://127.0.0.1:8000/conversa
+
+# Executa toda a suíte de testes do projeto.
+python -m pytest -q tests/
+```
+
+Os dois primeiros comandos devem retornar `303` e o endereço da página inicial. O terceiro deve retornar `200`. Para verificar os fluxos de conversa, use o navegador ou os testes automatizados; **não é necessário utilizar a API externa para testar redirecionamentos** quando a resposta do agente é simulada. A quantidade total de testes pode crescer nas aulas seguintes; o critério é que todos sejam aprovados.
 
 ## 12. Solução de problemas
 
-| Sintoma | Possível causa e correção |
-|---|---|
-| `No module named services.agenteIA` | Crie `services/agenteIA.py` com o código da Seção 4 |
-| `No module named services.diagnosticoIA` | Confirme o arquivo gerado na Aula 03 |
-| `FileNotFoundError` em `model/` | Verifique os três arquivos persistidos na Aula 03 |
-| `NameError: app is not defined` | Crie `app = FastAPI()` antes de definir as rotas |
-| HTTP 500, `TypeError: unhashable type: 'dict'` | Atualize todas as chamadas de `TemplateResponse()` |
-| `Form data requires python-multipart` | Instale `python-multipart` no `.venv` |
-| Assistente indisponível | Verifique chave, rede, permissões e faturamento da API |
-| `ERR_ADDRESS_INVALID (-108)` | Não abra `0.0.0.0` no navegador; utilize `127.0.0.1` ou o IPv4 real do computador |
-| Celular não abre o QR Code | Use `--host 0.0.0.0`, confira IP, Wi-Fi e Firewall privado |
-| `422 Unprocessable Entity` | Informe JSON com campo `texto` e ao menos duas palavras |
+| Sintoma                                        | Possível causa e correção                                                         |
+| ---------------------------------------------- | --------------------------------------------------------------------------------- |
+| `No module named services.agenteIA`            | Crie `services/agenteIA.py` com o código da Seção 4                               |
+| `No module named services.diagnosticoIA`       | Confirme o arquivo gerado na Aula 03                                              |
+| `FileNotFoundError` em `model/`                | Verifique os três arquivos persistidos na Aula 03                                 |
+| `NameError: app is not defined`                | Crie `app = FastAPI()` antes de definir as rotas                                  |
+| HTTP 500, `TypeError: unhashable type: 'dict'` | Atualize todas as chamadas de `TemplateResponse()`                                |
+| `Form data requires python-multipart`          | Instale `python-multipart` no `.venv`                                             |
+| Assistente indisponível                        | Verifique chave, rede, permissões e faturamento da API                            |
+| `ERR_ADDRESS_INVALID (-108)`                   | Não abra `0.0.0.0` no navegador; utilize `127.0.0.1` ou o IPv4 real do computador |
+| Celular não abre o QR Code                     | Use `--host 0.0.0.0`, confira IP, Wi-Fi e Firewall privado                        |
+| `422 Unprocessable Entity`                     | Informe JSON com campo `texto` e ao menos duas palavras                           |
 
 ## 13. Git e GitHub
 
 **Por que usar `.gitignore`?** O Git registra arquivos do projeto, mas não deve versionar credenciais, ambientes virtuais, caches ou artefatos gerados automaticamente. O arquivo `.gitignore` define esses padrões. O `requirements.txt`, por outro lado, registra as dependências necessárias para recriar o ambiente.
-
 
 Antes de publicar, evite versionar credenciais, `.venv`, históricos com dados sensíveis e arquivos de cache. Se ainda não existir, abra `.gitignore` e inclua:
 
@@ -690,15 +1207,16 @@ git push origin main
 - [ ] `services/agenteIA.py` existe e pode ser importado.
 - [ ] A chave de API não aparece no código nem no GitHub.
 - [ ] O classificador funciona sem consumir créditos da OpenAI.
-- [ ] `/`, `/diagnosticar`, `/api/saude`, `/api/prever` e `/docs` funcionam.
+- [ ] `/`, `/diagnosticar`, `/conversa`, `/chat_agente`, `/nova_conversa`, `/api/saude`, `/api/prever` e `/docs` funcionam.
 - [ ] O Swagger e a resposta real de `/api/prever` apresentam `confianca_percentual`.
 - [ ] O `.gitignore` exclui credenciais, artefatos de modelo, caches, QR Code gerado e histórico CSV.
 - [ ] Os dois formulários de conversa funcionam quando a API externa está disponível.
+- [ ] Copiei e testei os códigos completos de `templates/index.html` e `static/style.css` apresentados na Seção 7.
 - [ ] O QR Code abre o site no celular na mesma rede local.
 - [ ] Os testes automatizados foram executados.
 - [ ] O projeto foi registrado no GitHub.
 
-**Próxima aula:** aperfeiçoamento do agente, memória e histórico de conversação, validações e melhorias da interface.
+**Próxima aula:** aperfeiçoamento do agente, testes de regressão, validações e melhorias da aplicação.
 
 ---
 

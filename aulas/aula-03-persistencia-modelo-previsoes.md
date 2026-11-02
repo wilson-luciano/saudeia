@@ -137,14 +137,25 @@ if __name__ == "__main__":
     main()
 ```
 
-**O que acontece?** `treinar_modelo()` realiza o treinamento e a avaliação conforme a Aula 02; `save_model()` grava o XGBoost; `joblib.dump()` grava os dois objetos auxiliares. Os dados de teste não são usados para reajustar o TF-IDF.
+**O que acontece?** `treinar_modelo()` realiza o treinamento conforme a Aula 02 e devolve também os dados reservados para avaliação; `save_model()` grava o XGBoost; `joblib.dump()` grava os dois objetos auxiliares. Os dados de teste não são usados para reajustar o TF-IDF.
 
 <p align="center"><img src="../assets/fluxogramas/ciclo-salvar-carregar.png" alt="Ciclo de treinamento, salvamento e reutilização" width="750"></p>
 <p align="center"><em>Figura 2 — Treinamento, persistência, carregamento e inferência com os componentes do SaudeIA.</em></p>
 
 **Observação técnica sobre a Figura 2:** o comando `joblib.dump()` salva somente o TF-IDF e o LabelEncoder (`.pkl`). O XGBoost (`.json`) é salvo com `modelo.save_model()`. Da mesma forma, no carregamento, usamos `joblib.load()` para os arquivos `.pkl` e `modelo.load_model()` para o arquivo `.json`.
 
-### 4.1. Gerar os três arquivos
+### 4.1. Executar o serviço como módulo
+
+A última parte do arquivo é indispensável:
+
+```python
+if __name__ == "__main__":
+    main()
+```
+
+Ela faz com que `salvar_tudo()` seja executada quando o aluno utiliza `python -m services.salvarmodelService`. **Se o arquivo definir apenas `salvar_tudo()` e não contiver esse bloco, o comando terminará sem salvar os modelos.**
+
+### 4.2. Gerar os três arquivos
 
 Execute **a partir da raiz do projeto**, com o ambiente virtual ativado:
 
@@ -152,10 +163,15 @@ Execute **a partir da raiz do projeto**, com o ambiente virtual ativado:
 python -m services.salvarmodelService
 
 # Lista os arquivos gerados.
-Get-ChildItem .\model
+Get-ChildItem .\model | Select-Object Name, Length
+
+# Confere se os três arquivos foram efetivamente criados.
+Test-Path .\model\modelo_saudeIA.json
+Test-Path .\model\vetorizador_saudeIA.pkl
+Test-Path .\model\encoderY_saudeIA.pkl
 ```
 
-O resultado deve incluir os três nomes apresentados acima. Se ocorrer erro de leitura do CSV, volte à Aula 02 e confira o caminho do conjunto tratado. O treinamento pode demorar conforme o computador e os dados.
+Os três comandos `Test-Path` devem retornar `True`. O resultado deve incluir os três nomes apresentados acima. Se ocorrer erro de leitura do CSV, volte à Aula 02 e confira o caminho do conjunto tratado. O treinamento pode demorar conforme o computador e os dados.
 
 ## 5. Previsões: o que é inferência?
 
@@ -395,10 +411,14 @@ python -m pytest -q tests/test_modelos_saudeia.py
 3. Explique por que utilizar `fit_transform()` em um texto novo seria incorreto.
 4. **Engenharia Mecânica:** imagine um classificador de descrições de falhas em bombas. Quais três componentes precisariam ser salvos para reutilizar esse sistema?
 
+### 8.1. O que os testes verificam
+
+Os quatro testes criam arquivos temporários, carregam os três componentes, verificam o formato da resposta e rejeitam entradas vazias ou arquivos ausentes. Eles **não** substituem a avaliação de acurácia da Aula 02 e não constituem validação clínica.
+
 ## 10. Verificação final
 
 - [ ] Utilizei os módulos `salvarmodelService.py` e `diagnosticoIA.py`.
-- [ ] Gerei os três arquivos com os nomes esperados em `model/`.
+- [ ] Confirmei com `Test-Path` que os três arquivos foram criados em `model/`.
 - [ ] Consegui realizar uma previsão sem repetir o treinamento.
 - [ ] Entendo a diferença entre `fit_transform()` e `transform()`.
 - [ ] Executei os quatro testes automatizados.

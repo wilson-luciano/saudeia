@@ -51,6 +51,8 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
+**Atenção:** o arquivo `requirements.txt` deve estar salvo em **UTF-8** para garantir a leitura correta pelo `pip`. A instalação das bibliotecas não exige uma chave da OpenAI; essa chave será necessária apenas para utilizar as funcionalidades de conversa com o serviço externo.
+
 Com a ativação, o terminal deverá mostrar `(.venv)` antes do caminho. Nesse estado, `python` e `pip` utilizam o ambiente virtual do projeto.
 
 Se a ativação for bloqueada pela política do PowerShell, execute **somente no terminal atual**:
@@ -85,7 +87,7 @@ Resultado esperado: `Ambiente SaudeIA OK`.
 | `README.md` e `LICENSE` | Documentação e licença MIT |
 | `.gitignore` e `.env.example` | Regras de exclusão do Git e modelo de configuração |
 
-A configuração da chave OpenAI será abordada apenas na Aula 06, com duas alternativas: variável de ambiente do Windows (preferencial) e arquivo `.env`.
+A configuração da chave da API OpenAI será abordada na **Aula 04**, durante a implementação da aplicação web e da integração com o assistente de IA. A chave poderá ser configurada por variável de ambiente ou por arquivo `.env`, sem incluir credenciais no GitHub.
 
 ## 5. Testar a presença dos dados
 
