@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+  <head>
+    <title>SaudeIA</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/static/style.css" />
+    <link rel="icon" href="/static/favicon.ico" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>🩺 SaudeIA</h2>
+
+      <!-- ERRO DE VALIDAÇÃO -->
+      {% if erro %}
+      <div class="resultado" style="color: red">{{ erro }}</div>
+      {% endif %}
+
+      <!-- FORMULÁRIO PRINCIPAL -->
+      <form action="/diagnosticar" method="post">
+        <textarea name="sintomas" placeholder="Digite os sintomas...">
+{{ sintomas }}</textarea
+        >
+
+        <button type="submit">Diagnosticar</button>
+
+        <a href="/"> <button type="button">Limpar</button></a>
+      </form>
+
+      <!-- RESULTADO DO DIAGNÓSTICO -->
+      {% if doenca %}
+      <div class="resultado">
+        <h3>🩺 Diagnóstico</h3>
+        <h2>{{ doenca }}</h2>
+        <b>Confiança:</b> {{ prob }} %
+      </div>
+      {% endif %}
+
+      <!-- ASSISTENTE E AGENTE -->
+      {% if doenca %}
+
+      <hr />
+
+      <!-- ASSISTENTE SIMPLES -->
+      <h3>💬 Converse com o Assistente</h3>
+
+      <form action="/chat" method="post">
+        <input type="hidden" name="doenca" value="{{ doenca }}" />
+
+        <textarea name="pergunta" placeholder="Digite sua dúvida..."></textarea>
+
+        <button type="submit">Perguntar (Simples)</button>
+      </form>
+
+      {% if resposta %}
+      <div class="resultado">{{ resposta }}</div>
+      {% endif %}
+
+      <hr />
+
+      <!-- AGENTE DE IA (BATE-PAPO) -->
+      <h3>🤖 Agente de IA</h3>
+
+      <form action="/chat_agente" method="post">
+        <input type="hidden" name="doenca" value="{{ doenca }}" />
+
+        <textarea
+          name="pergunta"
+          placeholder="Pergunte ao agente..."
+        ></textarea>
+
+        <button type="submit">Perguntar ao Agente</button>
+      </form>
+
+      {% if ultima_pergunta and ultima_resposta %}
+      <div class="resultado">
+        <b>Você:</b> {{ ultima_pergunta }}<br /><br />
+        <b>Agente:</b> {{ ultima_resposta }}
+      </div>
+      {% endif %} {% endif %}
+
+      <!-- AVISO LEGAL -->
+      <hr />
+
+      <p
+        style="
+          margin-top: 20px;
+          font-size: 12px;
+          color: gray;
+          text-align: center;
+        "
+      >
+        ⚠️ Este sistema é educacional e não substitui avaliação médica!
+      </p>
+
+      <!-- QR CODE -->
+      <div style="text-align: center; margin-bottom: 15px">
+        <img src="/static/qrcode.png" width="160" />
+        <p style="font-size: 12px">Aponte a câmera do celular</p>
+      </div>
+    </div>
+  </body>
+</html>

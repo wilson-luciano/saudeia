@@ -1,0 +1,19 @@
+# Ambiente e credenciais
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.vscode/
+
+# Artefatos gerados
+model/*.json
+model/*.joblib
+model/*.pkl
+historico.csv
+*.log
+static/qrcode.png
+main_api_backup.py

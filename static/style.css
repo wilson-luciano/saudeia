@@ -1,0 +1,146 @@
+/* ==============================
+   RESET BÁSICO
+   ============================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==============================
+   BODY
+   ============================== */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f2f5f9;
+  padding: 10px;
+}
+
+/* ==============================
+   CONTAINER PRINCIPAL
+   ============================== */
+.container {
+  max-width: 500px;
+  width: 100%;
+  margin: 40px auto;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ==============================
+   TÍTULOS
+   ============================== */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* ==============================
+   TEXTAREA
+   ============================== */
+textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  font-size: 14px;
+}
+
+/* ==============================
+   BOTÕES
+   ============================== */
+button {
+  margin-top: 12px;
+  width: 100%;
+  padding: 10px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0b5ed7;
+}
+
+/* Botão secundário (Limpar) */
+a button {
+  background: #6c757d;
+}
+
+a button:hover {
+  background: #5a6268;
+}
+
+/* ==============================
+   RESULTADO / CAIXAS
+   ============================== */
+.resultado {
+  margin-top: 15px;
+  padding: 12px;
+  background: #e9ecef;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* ==============================
+   CHAT (AGENTE DE IA)
+   ============================== */
+.chat-box {
+  margin-top: 15px;
+}
+
+/* Mensagem do usuário */
+.chat-user {
+  background: #e3f2fd;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* Mensagem do agente */
+.chat-agent {
+  background: #f1f8e9;
+  padding: 10px;
+  margin: 6px 0;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* ==============================
+   QR CODE
+   ============================== */
+img {
+  max-width: 100%;
+}
+
+/* ==============================
+   RESPONSIVIDADE (CELULAR)
+   ============================== */
+@media (max-width: 480px) {
+  .container {
+    margin: 20px auto;
+    padding: 20px;
+  }
+
+  textarea {
+    min-height: 90px;
+  }
+
+  button {
+    font-size: 13px;
+  }
+}

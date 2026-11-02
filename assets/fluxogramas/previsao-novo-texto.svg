@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="440" viewBox="0 0 1100 440">
+<rect x="5" y="5" width="1090" height="430" rx="24" fill="#f8fbff" stroke="#a8c5e7" stroke-width="3"/>
+<text x="550" y="59" text-anchor="middle" font-family="Arial,sans-serif" font-size="31" font-weight="bold" fill="#173b78">Como funciona uma nova previsão?</text>
+<text x="550" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#375678">O texto de entrada não participa do treinamento</text>
+<rect x="42.0" y="145" width="237.5" height="168" rx="18" fill="#e6f2ff" stroke="#2377c7" stroke-width="3"/>
+<text x="160.8" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="bold" fill="#173b78">Novo texto</text>
+<text x="160.8" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">&quot;febre e tosse&quot;</text>
+<text x="160.8" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">Entrada do usuário</text>
+<path d="M 282.5 228 H 298.5 M 292.5 220 L 300.5 228 L 292.5 236" stroke="#3768b5" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="301.5" y="145" width="237.5" height="168" rx="18" fill="#e8f7f1" stroke="#21936a" stroke-width="3"/>
+<text x="420.2" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="bold" fill="#173b78">TF-IDF salvo</text>
+<text x="420.2" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">transform([texto])</text>
+<text x="420.2" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">Mesmo vocabulário</text>
+<path d="M 542.0 228 H 558.0 M 552.0 220 L 560.0 228 L 552.0 236" stroke="#3768b5" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="561.0" y="145" width="237.5" height="168" rx="18" fill="#fff0df" stroke="#e78b25" stroke-width="3"/>
+<text x="679.8" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="bold" fill="#173b78">Modelo salvo</text>
+<text x="679.8" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">predict(X)</text>
+<text x="679.8" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">Código da classe</text>
+<path d="M 801.5 228 H 817.5 M 811.5 220 L 819.5 228 L 811.5 236" stroke="#3768b5" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="820.5" y="145" width="237.5" height="168" rx="18" fill="#f2ecff" stroke="#7953bb" stroke-width="3"/>
+<text x="939.2" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="bold" fill="#173b78">Encoder salvo</text>
+<text x="939.2" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">inverse_transform()</text>
+<text x="939.2" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">Nome da classe</text>
+<text x="550" y="371" text-anchor="middle" font-family="Arial,sans-serif" font-size="19" fill="#173b78">Não utilizar fit() ou fit_transform() durante a inferência.</text>
+</svg>

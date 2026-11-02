@@ -1,0 +1,301 @@
+sintomas_texto,diagnostico,sintomas_limpo,diagnostico_limpo
+"tremores nas mãos, rigidez muscular, movimentos lentos",parkinson,tremores nas mãos rigidez bradicinesia,doenca_parkinson
+"dor intensa na barriga, enjoo, vômito, confusao e perda de apetite",porfiria,dor intensa na barriga enjoo vômito confusão e inapetência,porfiria
+"esquecimento constante, confusão, perda de referências com fraqueza",alzheimer,esquecimento constante confusão perda de referências com fraqueza,doenca_alzheimer
+"cansaço, dor na barriga, tremor, problemas no fígado",doenca_wilson,cansaço dor abdominal tremor problemas no fígado,doenca_wilson
+"dor abdominal intensa, náusea persistente, vômito, confusão mental com fraqueza",porfiria,dor abdominal intensa náusea persistente vômito confusão mental com fraqueza,porfiria
+cansaco extremo dor articular severa crises dolorosas e mal estar geral,anemia_falciforme,cansaço extremo dor articular severa crises dolorosas e mal estar,anemia_falciforme
+"dor no corpo todo, cansaço constante, dificuldade para dormir",fibromialgia,dor no corpo todo cansaço constante insônia,fibromialgia
+"cansaço extremo, dor articular severa, crises dolorosas",anemia_falciforme,cansaço extremo dor articular severa crises dolorosas,anemia_falciforme
+"cansaço extremo, dor articular, episódios dolorosos e dor de cabeça",anemia_falciforme,cansaço extremo dor articular episódios dolorosos e dor de cabeça,anemia_falciforme
+"temperatura alta, dor nos músculos, cansaço que nao passa",febre_maculosa,febre dor nos músculos cansaço que nao passa,febre_maculosa
+"tremores nas extremidades, rigidez, lentidão motora e dor de cabeça",parkinson,tremores nas extremidades rigidez bradicinesia e dor de cabeça,doenca_parkinson
+"dor abdominal severa, enjoo, vômito, confusao mental",porfiria,dor abdominal severa enjoo vômito confusão mental,porfiria
+"fadiga persistente, perda de força, visão dupla, formigamento acompanhado de tontura",esclerose_multipla,fadiga persistente perda de força diplopia formigamento acompanhado de tontura,esclerose_multipla
+"fadiga severa, obesidade, frieza excessiva",hipotireoidismo,fadiga severa obesidade frieza excessiva,hipotireoidismo
+"dores musculares difusas, fadiga severa, sono ruim",fibromialgia,dores musculares difusas fadiga severa insônia,fibromialgia
+"fadiga severa crônica, dor no corpo todo, problemas de foco",sindrome_fadiga_cronica,fadiga severa crônica dor no corpo todo problemas de foco,sindrome_fadiga_cronica
+"dor articular crônica, juntas inchadas, rigidez matinal",artrite_reumatoide,dor articular crônica inchaço articular rigidez matinal,artrite_reumatoide
+"tremor nas mãos, rigidez corporal, bradicinesia",parkinson,tremor nas mãos rigidez corporal bradicinesia,doenca_parkinson
+"secura na boca, olhos ressecados, cansaço, dor articular crônica com fraqueza",sindrome_sjogren,secura na boca olhos ressecados cansaço dor articular crônica com fraqueza,sindrome_sjogren
+"sede constante, micção frequente, perda de peso rápida",diabetes_tipo1,sede constante micção frequente emagrecimento rápida,diabetes_tipo1
+"cansaço severo, dor articular, crises de dor intensa",anemia_falciforme,cansaço severo dor articular crises de dor intensa,anemia_falciforme
+"tremor nas mãos, rigidez muscular, instabilidade postural",parkinson,tremor nas mãos rigidez instabilidade postural,doenca_parkinson
+"cólicas abdominais intensas, diarreia sanguinolenta",doenca_crohn,cólicas abdominais intensas diarréia sanguinolenta,doenca_crohn
+"muita sede, urinar muito, emagrecimento",diabetes_tipo1,sede excessiva micção frequente emagrecimento,diabetes_tipo1
+"cansaço, dor na região abdominal, tremor, hepatopatia",doenca_wilson,cansaço dor na região abdominal tremor hepatopatia,doenca_wilson
+"dor abdominal severa, náusea, vômito, confusão mental acompanhado de tontura",porfiria,dor abdominal severa náusea vômito confusão mental acompanhado de tontura,porfiria
+"cansaço severo, dor articular intensa, dor em crises",anemia_falciforme,cansaço severo dor articular intensa dor em crises,anemia_falciforme
+"febre alta, dor no corpo todo, cansaço extremo",febre_maculosa,febre alta dor no corpo todo cansaço extremo,febre_maculosa
+"cansaço extremo, obesidade progressiva, sensação de frio",hipotireoidismo,cansaço extremo obesidade progressiva sensação de frio,hipotireoidismo
+fadiga constante dor abdominal tremores hepatopatia,doenca_wilson,fadiga constante dor abdominal tremores hepatopatia,doenca_wilson
+"fadiga severa, dor nas juntas, dor em episódios",anemia_falciforme,fadiga severa dor nas juntas dor em episódios,anemia_falciforme
+dor articular fadiga crônica sensibilidade ao sol com fraqueza,lupus,dor articular fadiga crônica sensibilidade ao sol com fraqueza,lupus
+"dor severa na barriga, enjoo, vômito persistente, confusao",porfiria,dor severa na barriga enjoo vômito persistente confusão,porfiria
+"dor abdominal severa, náusea, vômito, confusão mental",porfiria,dor abdominal severa náusea vômito confusão mental,porfiria
+"emagrecimento rápido, taquicardia, ansiedade constante e mal estar geral",hipertireoidismo,emagrecimento rápido taquicardia ansiedade constante e mal estar,hipertireoidismo
+"esquecimento, confusão, perda de noção de tempo e lugar",alzheimer,esquecimento confusão perda de noção de tempo e lugar,doenca_alzheimer
+"dor na região abdominal, diarreia frequente, fraqueza",doenca_crohn,dor na região abdominal diarréia frequente fraqueza,doenca_crohn
+esquecimento confusão perda de noção de tempo e lugar,alzheimer,esquecimento confusão perda de noção de tempo e lugar,doenca_alzheimer
+"sede excessiva, poliúria, perda de peso inexplicável",diabetes_tipo1,sede excessiva poliúria emagrecimento inexplicável,diabetes_tipo1
+"cansaço severo, dor na barriga, tremor, disfunção hepática e mal estar geral",doenca_wilson,cansaço severo dor abdominal tremor disfunção hepática e mal estar,doenca_wilson
+"cansaço, dor na barriga, tremor, problemas no fígado",doenca_wilson,cansaço dor abdominal tremor problemas no fígado,doenca_wilson
+"febre baixa, cansaço, dor no corpo, manchas na pele",doenca_lyme,febre baixa cansaço dor no corpo manchas na pele,doenca_lyme
+"braços sem força, fala difícil, atrofia muscular",esclerose_lateral,braços sem força fala difícil atrofia muscular,esclerose_lateral
+"muita sede, urina frequente, emagrecimento súbito",diabetes_tipo1,sede excessiva urina frequente emagrecimento súbito,diabetes_tipo1
+"juntas doloridas, cansaço que não passa, manchas na face",lupus,juntas doloridas cansaço que não passa manchas na face,lupus
+"articulações inflamadas, dor constante, rigidez",artrite_reumatoide,articulações inflamadas dor constante rigidez,artrite_reumatoide
+"dor articular, fadiga crônica, sensibilidade ao sol",lupus,dor articular fadiga crônica sensibilidade ao sol,lupus
+"perda de força, cansaço, diplopia, problemas de deglutição",miastenia_gravis,perda de força cansaço diplopia problemas de deglutição,miastenia_gravis
+"dor severa na barriga, enjoo, vômito frequente, alterações cognitivas",porfiria,dor severa na barriga enjoo vômito frequente alterações cognitivas,porfiria
+"febre baixa, cansaço constante, dor no corpo, manchas",doenca_lyme,febre baixa cansaço constante dor no corpo manchas,doenca_lyme
+boca seca olhos secos severos fadiga dor nas articulações,sindrome_sjogren,secura oral secura ocular severos fadiga dor nas articulações,sindrome_sjogren
+"dor nas juntas, inchaço articular, dificuldade de movimento com fraqueza",artrite_reumatoide,dor nas juntas inchaço articular dificuldade de movimento com fraqueza,artrite_reumatoide
+"dor nas articulações, cansaco extrema, problemas de pele",lupus,dor nas articulações cansaço extrema problemas de pele,lupus
+"febre persistente, dor muscular generalizada, erupçao cutânea",febre_maculosa,febre persistente dor muscular generalizada erupção cutânea,febre_maculosa
+"cansaco severo, aumento de peso, frio excessivo acompanhado de tontura",hipotireoidismo,cansaço severo ganho de peso frio excessivo acompanhado de tontura,hipotireoidismo
+cansaço que não alivia dor muscular difusa névoa cerebral,sindrome_fadiga_cronica,cansaço que não alivia dor muscular difusa névoa cerebral,sindrome_fadiga_cronica
+"dor muscular difusa, cansaço severo, dificuldades do sono acompanhado de tontura",fibromialgia,dor muscular difusa cansaço severo dificuldades do sono acompanhado de tontura,fibromialgia
+"fadiga extrema constante, dor generalizada, dificuldade mental",sindrome_fadiga_cronica,fadiga extrema constante dor generalizada dificuldade mental,sindrome_fadiga_cronica
+"braços fracos, problemas na fala, contrações musculares",esclerose_lateral,braços fracos problemas na fala contrações musculares,esclerose_lateral
+"dor nas juntas, inchaço articular, dificuldade de movimento",artrite_reumatoide,dor nas juntas inchaço articular dificuldade de movimento,artrite_reumatoide
+perda de peso palpitações frequentes nervosismo,hipertireoidismo,emagrecimento palpitações frequentes nervosismo,hipertireoidismo
+perda de força cansaço extremo diplopia problemas para engolir,miastenia_gravis,perda de força cansaço extremo diplopia dificuldade deglutição,miastenia_gravis
+"cansaço que não passa, dor articular, crises álgicas",anemia_falciforme,cansaço que não passa dor articular crises álgicas,anemia_falciforme
+"fadiga crônica, coordenação prejudicada, visão turva",esclerose_multipla,fadiga crônica coordenação prejudicada visão embaçada,esclerose_multipla
+"perda de memória progressiva, confusão, dificuldade de orientacão",alzheimer,perda de memória progressiva confusão dificuldade de orientacão,doenca_alzheimer
+cansaço severo falta de ar aos esforços tosse febre,sarcoidose,cansaço severo dispneia aos esforços tosse febre,sarcoidose
+"problemas de memória, confusão mental, desorientação temporal",alzheimer,perda de memória confusão mental desorientação temporal,doenca_alzheimer
+"dor no corpo todo, cansaço constante, dificuldade para dormir",fibromialgia,dor no corpo todo cansaço constante insônia,fibromialgia
+"fadiga severa crônica, dor no corpo todo, problemas de foco e dor de cabeça",sindrome_fadiga_cronica,fadiga severa crônica dor no corpo todo problemas de foco e dor de cabeça,sindrome_fadiga_cronica
+"febre baixa, cansaço severo, dor no corpo, manchas cutâneas e mal estar geral",doenca_lyme,febre baixa cansaço severo dor no corpo manchas cutâneas e mal estar,doenca_lyme
+problemas de memória confusão mental desorientação temporal,alzheimer,perda de memória confusão mental desorientação temporal,doenca_alzheimer
+"fadiga, fraqueza nas pernas, visão turva, formigamento",esclerose_multipla,fadiga fraqueza nas pernas visão embaçada formigamento,esclerose_multipla
+cólicas fortes diarreia com muco emagrecimento e perda de apetite,doenca_crohn,cólicas fortes diarréia com muco emagrecimento e inapetência,doenca_crohn
+"dor nas articulações, inchaço nas juntas, rigidez matinal e mal estar geral",artrite_reumatoide,dor nas articulações inchaço nas juntas rigidez matinal e mal estar,artrite_reumatoide
+"dor nas juntas, inchaço articular, rigidez ao acordar e dor de cabeça",artrite_reumatoide,dor nas juntas inchaço articular rigidez ao acordar e dor de cabeça,artrite_reumatoide
+"fraqueza muscular, fadiga severa, visão dupla, dificuldade para engolir",miastenia_gravis,fraqueza muscular fadiga severa diplopia dificuldade para engolir,miastenia_gravis
+"dor nas juntas, inchaço articular, rigidez ao acordar",artrite_reumatoide,dor nas juntas inchaço articular rigidez ao acordar,artrite_reumatoide
+"dor forte no abdômen, enjoo constante, vômito, confusão",porfiria,dor forte no abdômen enjoo constante vômito confusão,porfiria
+"articulaçoes inflamadas, dor constante, rigidez",artrite_reumatoide,articulaçoes inflamadas dor constante rigidez,artrite_reumatoide
+"secura oral, olhos ressecados, cansaço constante, dor articular e dor de cabeça",sindrome_sjogren,secura oral olhos ressecados cansaço constante dor articular e dor de cabeça,sindrome_sjogren
+temperatura alta dor nos músculos cansaço que não passa,febre_maculosa,febre dor nos músculos cansaço que não passa,febre_maculosa
+"dor em múltiplos pontos, fadiga crônica, insônia severa",fibromialgia,dor em múltiplos pontos fadiga crônica insônia severa,fibromialgia
+"emagrecimento súbito, batimentos acelerados, ansiedade",hipertireoidismo,emagrecimento súbito taquicardia ansiedade,hipertireoidismo
+"dor abdominal severa, náusea, vômito, confusão mental",porfiria,dor abdominal severa náusea vômito confusão mental,porfiria
+"dor corporal generalizada, cansaco persistente, sono fragmentado",fibromialgia,dor corporal generalizada cansaço persistente sono fragmentado,fibromialgia
+"cansaco severa, fraqueza muscular, visao dupla, dormência",esclerose_multipla,cansaço severa fraqueza muscular visao dupla dormência,esclerose_multipla
+"emagrecimento rápido, taquicardia, ansiedade constante e dor de cabeça",hipertireoidismo,emagrecimento rápido taquicardia ansiedade constante e dor de cabeça,hipertireoidismo
+"dor nas juntas, fadiga que não melhora, erupção facial",lupus,dor nas juntas fadiga que não melhora erupção facial,lupus
+"perda de forca muscular, dificuldade para engolir e dor de cabeça",esclerose_lateral,perda de força muscular dificuldade para engolir e dor de cabeça,esclerose_lateral
+dificuldade para levantar os bracos fala alterada,esclerose_lateral,dificuldade para levantar os bracos fala alterada,esclerose_lateral
+"secura oral, olhos ressecados, cansaço constante, dor articular e dor de cabeça",sindrome_sjogren,secura oral olhos ressecados cansaço constante dor articular e dor de cabeça,sindrome_sjogren
+"febre de 39°C, dor nas costas, náusea e vômito",febre_maculosa,febre de c dor nas costas náusea e vômito,febre_maculosa
+"febre baixa, cansaço severo, dor no corpo, manchas cutâneas acompanhado de tontura",doenca_lyme,febre baixa cansaço severo dor no corpo manchas cutâneas acompanhado de tontura,doenca_lyme
+"articulações dolorosas, inchaço persistente, rigidez",artrite_reumatoide,articulações dolorosas inchaço persistente rigidez,artrite_reumatoide
+"cansaco crônica, falta de ar, tosse seca persistente, febre e mal estar geral",sarcoidose,cansaço crônica dispneia tosse seca persistente febre e mal estar,sarcoidose
+"sede excessiva, urina frequente, perda de peso e mal estar geral",diabetes_tipo1,sede excessiva urina frequente emagrecimento e mal estar,diabetes_tipo1
+"dor articular, juntas inchadas, dificuldade para se mover",artrite_reumatoide,dor articular inchaço articular dificuldade para se mover,artrite_reumatoide
+dor severa na barriga enjoo vômito frequente alteracões cognitivas e perda de apetite,porfiria,dor severa na barriga enjoo vômito frequente alteracões cognitivas e inapetência,porfiria
+"dor articular, fadiga crônica, sensibilidade ao sol e mal estar geral",lupus,dor articular fadiga crônica sensibilidade ao sol e mal estar,lupus
+"perda de força, cansaço, diplopia, problemas para engolir",miastenia_gravis,perda de força cansaço diplopia dificuldade deglutição,miastenia_gravis
+"temperatura elevada, dores musculares intensas, cansaco severa com fraqueza",febre_maculosa,febre dores musculares intensas cansaço severa com fraqueza,febre_maculosa
+temperatura elevada dor generalizada náusea,febre_maculosa,febre dor generalizada náusea,febre_maculosa
+"temperatura elevada, dores musculares intensas, fadiga severa com fraqueza",febre_maculosa,febre dores musculares intensas fadiga severa com fraqueza,febre_maculosa
+"dor na região abdominal, diarreia frequente, fraqueza acompanhado de tontura",doenca_crohn,dor na região abdominal diarréia frequente fraqueza acompanhado de tontura,doenca_crohn
+boca seca olhos secos severos fadiga dor nas articulações,sindrome_sjogren,secura oral secura ocular severos fadiga dor nas articulações,sindrome_sjogren
+"muita sede, urina frequente, emagrecimento súbito",diabetes_tipo1,sede excessiva urina frequente emagrecimento súbito,diabetes_tipo1
+"cansaço que não alivia, dor muscular difusa, névoa cerebral",sindrome_fadiga_cronica,cansaço que não alivia dor muscular difusa névoa cerebral,sindrome_fadiga_cronica
+"secura oral, olhos ressecados, cansaço constante, dor articular",sindrome_sjogren,secura oral olhos ressecados cansaço constante dor articular,sindrome_sjogren
+"fadiga severa, dor nas juntas, dor em episódios",anemia_falciforme,fadiga severa dor nas juntas dor em episódios,anemia_falciforme
+"perda de força, cansaço, diplopia, problemas de deglutição",miastenia_gravis,perda de força cansaço diplopia problemas de deglutição,miastenia_gravis
+"esquecimento, confusão, perda de noção de tempo e lugar",alzheimer,esquecimento confusão perda de noção de tempo e lugar,doenca_alzheimer
+"febre baixa, cansaço constante, dor no corpo, manchas e perda de apetite",doenca_lyme,febre baixa cansaço constante dor no corpo manchas e inapetência,doenca_lyme
+cansaco crônica aumento de peso inexplicável intolerância ao frio,hipotireoidismo,cansaço crônica ganho de peso inexplicável intolerância ao frio,hipotireoidismo
+"perda de força, fala lenta, rigidez muscular com fraqueza",esclerose_lateral,perda de força fala lenta rigidez com fraqueza,esclerose_lateral
+"febre intermitente, fadiga, dor muscular, erupçao acompanhado de tontura",doenca_lyme,febre intermitente fadiga dor muscular erupção acompanhado de tontura,doenca_lyme
+"fadiga constante, dor nas articulações, sensibilidade à luz",lupus,fadiga constante dor nas articulações sensibilidade à luz,lupus
+"dor articular, fadiga crônica, sensibilidade ao sol",lupus,dor articular fadiga crônica sensibilidade ao sol,lupus
+"tremor nas mãos, rigidez muscular, instabilidade postural",parkinson,tremor nas mãos rigidez instabilidade postural,doenca_parkinson
+"sede excessiva, urina frequente, perda de peso",diabetes_tipo1,sede excessiva urina frequente emagrecimento,diabetes_tipo1
+dor abdominal severa diarreia crônica fadiga,doenca_crohn,dor abdominal severa diarréia crônica fadiga,doenca_crohn
+"cansaço constante e severo, dores musculares, problemas cognitivos",sindrome_fadiga_cronica,cansaço constante e severo dores musculares problemas cognitivos,sindrome_fadiga_cronica
+"cansaço extremo, ganho de peso inexplicável, sensibilidade ao frio",hipotireoidismo,cansaço extremo ganho de peso inexplicável sensibilidade ao frio,hipotireoidismo
+"temperatura elevada, dores musculares intensas, fadiga severa",febre_maculosa,febre dores musculares intensas fadiga severa,febre_maculosa
+"fadiga, fraqueza nas pernas, visão turva, formigamento",esclerose_multipla,fadiga fraqueza nas pernas visão embaçada formigamento,esclerose_multipla
+"perda de força nos membros, fala arrastada, espasmos",esclerose_lateral,perda de força nos membros fala arrastada espasmos,esclerose_lateral
+"febre persistente, fadiga extrema, erupcões na pele",febre_maculosa,febre persistente fadiga extrema erupcões na pele,febre_maculosa
+"dor articular generalizada, fadiga severa, erupções cutâneas",lupus,dor articular generalizada fadiga severa erupções cutâneas,lupus
+cansaço extremo falta de ar tosse persistente febre baixa,sarcoidose,cansaço extremo dispneia tosse persistente febre baixa,sarcoidose
+"dor intensa no abdômen, enjoo severo, vômito, confusão e perda de apetite",porfiria,dor intensa no abdômen enjoo severo vômito confusão e inapetência,porfiria
+"cansaco severa crônica, dor no corpo todo, problemas de foco",sindrome_fadiga_cronica,cansaço severa crônica dor no corpo todo problemas de foco,sindrome_fadiga_cronica
+"sede intensa, micção excessiva, perda de peso e mal estar geral",diabetes_tipo1,sede intensa micção excessiva emagrecimento e mal estar,diabetes_tipo1
+"cansaço que não passa, ganho de peso rápido, frio constante e dor de cabeça",hipotireoidismo,cansaço que não passa ganho de peso rápido frio constante e dor de cabeça,hipotireoidismo
+"cansaço extremo, ganho de peso inexplicável, sensibilidade ao frio e dor de cabeça",hipotireoidismo,cansaço extremo ganho de peso inexplicável sensibilidade ao frio e dor de cabeça,hipotireoidismo
+"cansaço extremo que não melhora, dor muscular, problemas de memória e perda de apetite",sindrome_fadiga_cronica,cansaço extremo que não melhora dor muscular perda de memória e inapetência,sindrome_fadiga_cronica
+"fadiga constante, obesidade, intolerância ao frio",hipotireoidismo,fadiga constante obesidade intolerância ao frio,hipotireoidismo
+"cansaço severo, fraqueza muscular, problemas visuais, tontura",esclerose_multipla,cansaço severo fraqueza muscular visão alterada tontura,esclerose_multipla
+"febre de 39°C, dor nas costas, náusea e vômito",febre_maculosa,febre de c dor nas costas náusea e vômito,febre_maculosa
+"perda de força, cansaço, diplopia, problemas para engolir",miastenia_gravis,perda de força cansaço diplopia dificuldade deglutição,miastenia_gravis
+"dor abdominal severa, náusea, vômito, confusão mental",porfiria,dor abdominal severa náusea vômito confusão mental,porfiria
+dor em vários pontos do corpo cansaço extremo insônia e perda de apetite,fibromialgia,dor em vários pontos do corpo cansaço extremo insônia e inapetência,fibromialgia
+"boca ressecada, olhos secos crônicos, fadiga, dor articular e dor de cabeça",sindrome_sjogren,boca ressecada secura ocular crônicos fadiga dor articular e dor de cabeça,sindrome_sjogren
+"cansaco persistente, perda de forca, visão dupla, formigamento acompanhado de tontura",esclerose_multipla,cansaço persistente perda de força diplopia formigamento acompanhado de tontura,esclerose_multipla
+perda de forca nos membros fala arrastada espasmos,esclerose_lateral,perda de força nos membros fala arrastada espasmos,esclerose_lateral
+tremor nas mãos rigidez corporal bradicinesia,parkinson,tremor nas mãos rigidez corporal bradicinesia,doenca_parkinson
+"cansaço extremo, pernas fracas, visão embaçada, formigamento",esclerose_multipla,cansaço extremo pernas fracas visão embaçada formigamento,esclerose_multipla
+"dor nas juntas, inchaco articular, rigidez ao acordar",artrite_reumatoide,dor nas juntas inchaço articular rigidez ao acordar,artrite_reumatoide
+"fadiga crônica, aumento de peso inexplicável, intolerância ao frio acompanhado de tontura",hipotireoidismo,fadiga crônica ganho de peso inexplicável intolerância ao frio acompanhado de tontura,hipotireoidismo
+"perda de força muscular, cansaço, problemas visuais, dificuldade de deglutição e perda de apetite",miastenia_gravis,perda de força muscular cansaço visão alterada dificuldade de deglutição e inapetência,miastenia_gravis
+"boca ressecada, olhos secos, fadiga constante, dor articular",sindrome_sjogren,boca ressecada secura ocular fadiga constante dor articular,sindrome_sjogren
+cansaço dispneia aos esforços tosse febre baixa,sarcoidose,cansaço dispneia aos esforços tosse febre baixa,sarcoidose
+"tremor nas mãos, rigidez corporal, bradicinesia",parkinson,tremor nas mãos rigidez corporal bradicinesia,doenca_parkinson
+"cansaço severo, dor na barriga, tremor, disfunção hepática",doenca_wilson,cansaço severo dor abdominal tremor disfunção hepática,doenca_wilson
+"problemas de memória, confusão, dificuldade de localização",alzheimer,perda de memória confusão dificuldade de localização,doenca_alzheimer
+"fadiga extrema, dor generalizada, dificuldade de concentração",sindrome_fadiga_cronica,fadiga extrema dor generalizada dificuldade de concentração,sindrome_fadiga_cronica
+"tremor característico, músculos tensos, movimentos lentos",parkinson,tremor característico músculos tensos bradicinesia,doenca_parkinson
+"temperatura alta, dor nos músculos, cansaço que não passa",febre_maculosa,febre dor nos músculos cansaço que não passa,febre_maculosa
+dor nas juntas inchaço articular dificuldade de movimento e perda de apetite,artrite_reumatoide,dor nas juntas inchaço articular dificuldade de movimento e inapetência,artrite_reumatoide
+febre baixa cansaço severo dor no corpo manchas cutâneas acompanhado de tontura,doenca_lyme,febre baixa cansaço severo dor no corpo manchas cutâneas acompanhado de tontura,doenca_lyme
+"fadiga constante, obesidade, intolerância ao frio e dor de cabeça",hipotireoidismo,fadiga constante obesidade intolerância ao frio e dor de cabeça,hipotireoidismo
+"dor muscular generalizada, fadiga crônica, insônia e perda de apetite",fibromialgia,dor muscular generalizada fadiga crônica insônia e inapetência,fibromialgia
+sede excessiva poliúria perda de peso inexplicável,diabetes_tipo1,sede excessiva poliúria emagrecimento inexplicável,diabetes_tipo1
+"fadiga persistente, perda de força, visão dupla, formigamento e dor de cabeça",esclerose_multipla,fadiga persistente perda de força diplopia formigamento e dor de cabeça,esclerose_multipla
+"perda de memória, confusão mental, desorientação",alzheimer,perda de memória confusão mental desorientação,doenca_alzheimer
+tremor de repouso rigidez movimentos prejudicados,parkinson,tremor de repouso rigidez movimentos prejudicados,doenca_parkinson
+"fadiga extrema, dor generalizada, dificuldade de concentração com fraqueza",sindrome_fadiga_cronica,fadiga extrema dor generalizada dificuldade de concentração com fraqueza,sindrome_fadiga_cronica
+"boca seca persistente, olhos secos, fadiga, dor articular",sindrome_sjogren,secura oral persistente secura ocular fadiga dor articular,sindrome_sjogren
+"cansaco persistente, perda de força, visão dupla, formigamento",esclerose_multipla,cansaço persistente perda de força diplopia formigamento,esclerose_multipla
+"sede constante, urinar muito, emagrecimento rápido",diabetes_tipo1,sede constante micção frequente emagrecimento rápido,diabetes_tipo1
+"ESQUECIMENTO CONSTANTE, CONFUSÃO, PERDA DE REFERÊNCIAS com fraqueza",alzheimer,esquecimento constante confusão perda de referências com fraqueza,doenca_alzheimer
+"fadiga extrema constante, dor generalizada, dificuldade mental",sindrome_fadiga_cronica,fadiga extrema constante dor generalizada dificuldade mental,sindrome_fadiga_cronica
+"febre persistente, fadiga severa, dor muscular, erupçoes",doenca_lyme,febre persistente fadiga severa dor muscular erupções,doenca_lyme
+"tremor característico, músculos tensos, movimentos lentos e mal estar geral",parkinson,tremor característico músculos tensos bradicinesia e mal estar,doenca_parkinson
+"febre, fadiga, dor muscular, erupção cutânea com fraqueza",doenca_lyme,febre fadiga dor muscular erupção cutânea com fraqueza,doenca_lyme
+"articulações rígidas e doloridas, inchaço persistente",artrite_reumatoide,articulações rígidas e doloridas inchaço persistente,artrite_reumatoide
+"esquecimento constante, confusão, perda de referências",alzheimer,esquecimento constante confusão perda de referências,doenca_alzheimer
+"dor generalizada, cansaço que não melhora, problemas para dormir",fibromialgia,dor generalizada cansaço que não melhora problemas para dormir,fibromialgia
+"fadiga crônica, coordenação prejudicada, visão turva",esclerose_multipla,fadiga crônica coordenação prejudicada visão embaçada,esclerose_multipla
+"cansaço severo, dor na barriga, tremor, disfunção hepática",doenca_wilson,cansaço severo dor abdominal tremor disfunção hepática,doenca_wilson
+"cansaço severo, aumento de peso, frio excessivo acompanhado de tontura",hipotireoidismo,cansaço severo ganho de peso frio excessivo acompanhado de tontura,hipotireoidismo
+"cansaço severo, fraqueza muscular, problemas visuais, tontura acompanhado de tontura",esclerose_multipla,cansaço severo fraqueza muscular visão alterada tontura acompanhado de tontura,esclerose_multipla
+"dor nas juntas, inchaço articular, rigidez ao acordar e perda de apetite",artrite_reumatoide,dor nas juntas inchaço articular rigidez ao acordar e inapetência,artrite_reumatoide
+"dor abdominal aguda, enjoo, vômito, confusão mental e mal estar geral",porfiria,dor abdominal aguda enjoo vômito confusão mental e mal estar,porfiria
+"cansaço extremo e persistente, dor muscular, confusão",sindrome_fadiga_cronica,cansaço extremo e persistente dor muscular confusão,sindrome_fadiga_cronica
+"fadiga persistente, perda de força, visão dupla, formigamento",esclerose_multipla,fadiga persistente perda de força diplopia formigamento,esclerose_multipla
+"febre alta, dor no corpo todo, cansaço extremo",febre_maculosa,febre alta dor no corpo todo cansaço extremo,febre_maculosa
+"fadiga crônica, coordenacão prejudicada, visão turva",esclerose_multipla,fadiga crônica coordenacão prejudicada visão embaçada,esclerose_multipla
+"sede intensa, urina em excesso, emagrecimento súbito",diabetes_tipo1,sede intensa urina em excesso emagrecimento súbito,diabetes_tipo1
+"perda de força muscular, dificuldade para engolir",esclerose_lateral,perda de força muscular dificuldade para engolir,esclerose_lateral
+"cansaco extremo, ganho de peso inexplicável, sensibilidade ao frio e perda de apetite",hipotireoidismo,cansaço extremo ganho de peso inexplicável sensibilidade ao frio e inapetência,hipotireoidismo
+"emagrecimento, palpitações, estado de nervosismo",hipertireoidismo,emagrecimento palpitações estado de nervosismo,hipertireoidismo
+febre persistente fadiga severa dor muscular erupções,doenca_lyme,febre persistente fadiga severa dor muscular erupções,doenca_lyme
+"fadiga constante, dispneia, tosse seca, febre intermitente e dor de cabeça",sarcoidose,fadiga constante dispneia tosse seca febre intermitente e dor de cabeça,sarcoidose
+"febre intermitente, fadiga, dor muscular, erupção acompanhado de tontura",doenca_lyme,febre intermitente fadiga dor muscular erupção acompanhado de tontura,doenca_lyme
+"secura na boca, olhos ressecados, cansaco extremo, dor nas juntas",sindrome_sjogren,secura na boca olhos ressecados cansaço extremo dor nas juntas,sindrome_sjogren
+"fraqueza nos músculos, fadiga severa, visão dupla, disfagia com fraqueza",miastenia_gravis,fraqueza nos músculos fadiga severa diplopia disfagia com fraqueza,miastenia_gravis
+"perda de forca, cansaco, diplopia, problemas para engolir",miastenia_gravis,perda de força cansaço diplopia dificuldade deglutição,miastenia_gravis
+"cansaço constante, aumento de peso, sensibilidade ao frio",hipotireoidismo,cansaço constante ganho de peso sensibilidade ao frio,hipotireoidismo
+"febre intermitente, cansaço, dor corporal, lesões cutâneas",doenca_lyme,febre intermitente cansaço dor corporal lesões cutâneas,doenca_lyme
+"dor no abdômen, fezes líquidas, perda de peso rápida",doenca_crohn,dor no abdômen diarreia emagrecimento rápida,doenca_crohn
+"fraqueza nos músculos, fadiga constante, visao dupla, dificuldade de deglutiçao",miastenia_gravis,fraqueza nos músculos fadiga constante visao dupla dificuldade de deglutição,miastenia_gravis
+"dor de cabeça intensa, febre alta, dor muscular",febre_maculosa,dor de cabeça intensa febre alta dor muscular,febre_maculosa
+"secura oral, olhos ressecados, cansaço constante, dor articular",sindrome_sjogren,secura oral olhos ressecados cansaço constante dor articular,sindrome_sjogren
+"fadiga, falta de ar, tosse seca, febre baixa",sarcoidose,fadiga dispneia tosse seca febre baixa,sarcoidose
+"perda de memória, confusão frequente, dificuldade de localização",alzheimer,perda de memória confusão frequente dificuldade de localização,doenca_alzheimer
+"cansaço constante, dor no abdômen, tremor, problemas hepáticos",doenca_wilson,cansaço constante dor no abdômen tremor problemas hepáticos,doenca_wilson
+"cansaço constante, dificuldade para respirar, tosse, febre intermitente",sarcoidose,cansaço constante dificuldade respiratória tosse febre intermitente,sarcoidose
+"articulações rígidas, cansaço constante, fotossensibilidade",lupus,articulações rígidas cansaço constante fotossensibilidade,lupus
+"cansaço extremo, dor articular severa, crises dolorosas com fraqueza",anemia_falciforme,cansaço extremo dor articular severa crises dolorosas com fraqueza,anemia_falciforme
+cólicas abdominais intensas diarreia sanguinolenta com fraqueza,doenca_crohn,cólicas abdominais intensas diarréia sanguinolenta com fraqueza,doenca_crohn
+"juntas doloridas, cansaço que não passa, manchas na face",lupus,juntas doloridas cansaço que não passa manchas na face,lupus
+"fadiga severa, dificuldade respiratória, tosse seca, febre e mal estar geral",sarcoidose,fadiga severa dificuldade respiratória tosse seca febre e mal estar,sarcoidose
+"dificuldade para levantar os braços, fala alterada",esclerose_lateral,dificuldade para levantar os braços fala alterada,esclerose_lateral
+"dor muscular generalizada, cansaco crônica, insônia",fibromialgia,dor muscular generalizada cansaço crônica insônia,fibromialgia
+"dor muscular generalizada, fadiga crônica, insônia acompanhado de tontura",fibromialgia,dor muscular generalizada fadiga crônica insônia acompanhado de tontura,fibromialgia
+"tremor de repouso, rigidez, movimentos prejudicados e dor de cabeça",parkinson,tremor de repouso rigidez movimentos prejudicados e dor de cabeça,doenca_parkinson
+"cansaço severo, falta de ar aos esforços, tosse, febre e dor de cabeça",sarcoidose,cansaço severo dispneia aos esforços tosse febre e dor de cabeça,sarcoidose
+"cólicas abdominais intensas, diarreia sanguinolenta",doenca_crohn,cólicas abdominais intensas diarréia sanguinolenta,doenca_crohn
+"dor muscular generalizada, fadiga crônica, insônia e perda de apetite",fibromialgia,dor muscular generalizada fadiga crônica insônia e inapetência,fibromialgia
+"cansaço severo, falta de ar aos esforços, tosse, febre",sarcoidose,cansaço severo dispneia aos esforços tosse febre,sarcoidose
+"perda de forca, cansaco, diplopia, problemas de degluticão",miastenia_gravis,perda de força cansaço diplopia problemas de degluticão,miastenia_gravis
+"febre, fadiga, dor muscular, erupção cutânea e mal estar geral",doenca_lyme,febre fadiga dor muscular erupção cutânea e mal estar,doenca_lyme
+"febre persistente, fadiga extrema, erupções na pele",febre_maculosa,febre persistente fadiga extrema erupções na pele,febre_maculosa
+cansaço extremo e persistente dor muscular confusão,sindrome_fadiga_cronica,cansaço extremo e persistente dor muscular confusão,sindrome_fadiga_cronica
+"tremores, rigidez muscular, perda de equilíbrio",parkinson,tremores rigidez perda de equilíbrio,doenca_parkinson
+"fadiga, perda de equilíbrio, problemas de visão, dormência",esclerose_multipla,fadiga perda de equilíbrio problemas de visão dormência,esclerose_multipla
+"boca seca, olhos secos, fadiga, dor articular e perda de apetite",sindrome_sjogren,secura oral secura ocular fadiga dor articular e inapetência,sindrome_sjogren
+"perda de peso inexplicável, coração acelerado, agitação",hipertireoidismo,emagrecimento inexplicável taquicardia agitação,hipertireoidismo
+"DOR NAS JUNTAS, FADIGA QUE NAO MELHORA, ERUPÇAO FACIAL com fraqueza",lupus,dor nas juntas fadiga que nao melhora erupção facial com fraqueza,lupus
+"tremor de repouso, rigidez, movimentos prejudicados e mal estar geral",parkinson,tremor de repouso rigidez movimentos prejudicados e mal estar,doenca_parkinson
+"cansaço, dificuldade para respirar, tosse, febre",sarcoidose,cansaço dificuldade respiratória tosse febre,sarcoidose
+"sede constante, urinar mt, emagrecimento rápido acompanhado de tontura",diabetes_tipo1,sede constante urinar mt emagrecimento rápido acompanhado de tontura,diabetes_tipo1
+"febre persistente, fadiga severa, dor muscular, erupções acompanhado de tontura",doenca_lyme,febre persistente fadiga severa dor muscular erupções acompanhado de tontura,doenca_lyme
+"emagrecimento súbito, coração disparado, ansiedade acompanhado de tontura",hipertireoidismo,emagrecimento súbito taquicardia ansiedade acompanhado de tontura,hipertireoidismo
+fadiga dor abdominal tremores problemas hepáticos,doenca_wilson,fadiga dor abdominal tremores problemas hepáticos,doenca_wilson
+"perda de força nos membros, fala arrastada, espasmos",esclerose_lateral,perda de força nos membros fala arrastada espasmos,esclerose_lateral
+"FADIGA SEVERA, DOR NAS ARTICULAÇÕES, CRISES DE DOR",anemia_falciforme,fadiga severa dor nas articulações crises de dor,anemia_falciforme
+"dor abdominal severa, diarreia crônica, fadiga",doenca_crohn,dor abdominal severa diarréia crônica fadiga,doenca_crohn
+"cansaço extremo, dor articular, episódios dolorosos",anemia_falciforme,cansaço extremo dor articular episódios dolorosos,anemia_falciforme
+"fadiga crônica, falta de ar, tosse seca persistente, febre com fraqueza",sarcoidose,fadiga crônica dispneia tosse seca persistente febre com fraqueza,sarcoidose
+"cansaço, dificuldade para respirar, tosse, febre",sarcoidose,cansaço dificuldade respiratória tosse febre,sarcoidose
+"problemas de memória severos, confusão mental, desorientação",alzheimer,perda de memória severos confusão mental desorientação,doenca_alzheimer
+"fraqueza muscular, fadiga, visão dupla, dificuldade para engolir acompanhado de tontura",miastenia_gravis,fraqueza muscular fadiga diplopia dificuldade para engolir acompanhado de tontura,miastenia_gravis
+"fadiga constante, dispneia, tosse seca, febre intermitente",sarcoidose,fadiga constante dispneia tosse seca febre intermitente,sarcoidose
+"perda de força muscular, cansaço, problemas visuais, dificuldade de deglutição com fraqueza",miastenia_gravis,perda de força muscular cansaço visão alterada dificuldade de deglutição com fraqueza,miastenia_gravis
+"muita sede, frequência urinária aumentada, emagrecimento",diabetes_tipo1,sede excessiva frequência urinária aumentada emagrecimento,diabetes_tipo1
+fadiga crônica aumento de peso inexplicável intolerância ao frio,hipotireoidismo,fadiga crônica ganho de peso inexplicável intolerância ao frio,hipotireoidismo
+"cansaço, dor na barriga, tremor, problemas no fígado",doenca_wilson,cansaço dor abdominal tremor problemas no fígado,doenca_wilson
+"fadiga severa crônica, dor no corpo todo, problemas de foco",sindrome_fadiga_cronica,fadiga severa crônica dor no corpo todo problemas de foco,sindrome_fadiga_cronica
+"perda de peso inexplicável, coracão acelerado, agitacão e mal estar geral",hipertireoidismo,emagrecimento inexplicável taquicardia agitacão e mal estar,hipertireoidismo
+"emagrecimento súbito, coraçao disparado, ansiedade",hipertireoidismo,emagrecimento súbito coraçao disparado ansiedade,hipertireoidismo
+"emagrecimento, palpitações, estado de nervosismo e mal estar geral",hipertireoidismo,emagrecimento palpitações estado de nervosismo e mal estar,hipertireoidismo
+"perda de forca muscular, cansaco, problemas visuais, dificuldade de degluticão com fraqueza",miastenia_gravis,perda de força muscular cansaço visão alterada dificuldade de degluticão com fraqueza,miastenia_gravis
+"cólicas fortes, diarreia com muco, emagrecimento com fraqueza",doenca_crohn,cólicas fortes diarréia com muco emagrecimento com fraqueza,doenca_crohn
+"cólicas fortes, diarreia com muco, emagrecimento",doenca_crohn,cólicas fortes diarréia com muco emagrecimento,doenca_crohn
+"boca ressecada, olhos secos, fadiga constante, dor articular",sindrome_sjogren,boca ressecada secura ocular fadiga constante dor articular,sindrome_sjogren
+"dor articular, juntas inchadas, dificuldade para se mover com fraqueza",artrite_reumatoide,dor articular inchaço articular dificuldade para se mover com fraqueza,artrite_reumatoide
+"dificuldade para levantar os braços, fala alterada",esclerose_lateral,dificuldade para levantar os braços fala alterada,esclerose_lateral
+"emagrecimento rápido, taquicardia, ansiedade constante e mal estar geral",hipertireoidismo,emagrecimento rápido taquicardia ansiedade constante e mal estar,hipertireoidismo
+"cólicas abdominais, diarreia persistente, perda de apetite e mal estar geral",doenca_crohn,cólicas abdominais diarréia persistente inapetência e mal estar,doenca_crohn
+"tremor em repouso, rigidez, dificuldade para se mover e dor de cabeça",parkinson,tremor em repouso rigidez dificuldade para se mover e dor de cabeça,doenca_parkinson
+"problemas de memória severos, confusão mental, desorientação",alzheimer,perda de memória severos confusão mental desorientação,doenca_alzheimer
+"cansaco severo, dor articular intensa, dor em crises",anemia_falciforme,cansaço severo dor articular intensa dor em crises,anemia_falciforme
+"dor no corpo todo, cansaço constante, dificuldade para dormir e perda de apetite",fibromialgia,dor no corpo todo cansaço constante insônia e inapetência,fibromialgia
+"emagrecimento rápido, taquicardia, ansiedade constante",hipertireoidismo,emagrecimento rápido taquicardia ansiedade constante,hipertireoidismo
+"perda de força nos membros, fala arrastada, espasmos",esclerose_lateral,perda de força nos membros fala arrastada espasmos,esclerose_lateral
+"perda de peso rápida, batimentos irregulares, agitação",hipertireoidismo,emagrecimento rápida batimentos irregulares agitação,hipertireoidismo
+"cansaço extremo, articulações inchadas, fotofobia",lupus,cansaço extremo inchaço articular fotofobia,lupus
+"perda de peso, palpitações frequentes, nervosismo e perda de apetite",hipertireoidismo,emagrecimento palpitações frequentes nervosismo e inapetência,hipertireoidismo
+"fadiga constante, dor nas juntas, crises dolorosas",anemia_falciforme,fadiga constante dor nas juntas crises dolorosas,anemia_falciforme
+"fadiga severa, dor nas juntas, dor em episódios",anemia_falciforme,fadiga severa dor nas juntas dor em episódios,anemia_falciforme
+"esquecimento frequente, confusão, perda de orientação",alzheimer,esquecimento frequente confusão perda de orientação,doenca_alzheimer
+"sede constante, urinar muito, emagrecimento rápido",diabetes_tipo1,sede constante micção frequente emagrecimento rápido,diabetes_tipo1
+"muita sede, urina frequente, emagrecimento súbito e perda de apetite",diabetes_tipo1,sede excessiva urina frequente emagrecimento súbito e inapetência,diabetes_tipo1
+"cólicas fortes, diarreia com muco, emagrecimento",doenca_crohn,cólicas fortes diarréia com muco emagrecimento,doenca_crohn
+"cansaço, dor na barriga, tremor, problemas no fígado",doenca_wilson,cansaço dor abdominal tremor problemas no fígado,doenca_wilson
+"cansaço severo, dor na barriga, tremor, disfunção hepática",doenca_wilson,cansaço severo dor abdominal tremor disfunção hepática,doenca_wilson
+"dor intensa no abdômen, enjoo severo, vômito, confusão e perda de apetite",porfiria,dor intensa no abdômen enjoo severo vômito confusão e inapetência,porfiria
+"febre baixa, cansaço constante, dor no corpo, manchas",doenca_lyme,febre baixa cansaço constante dor no corpo manchas,doenca_lyme
+"tremor nas mãos, rigidez muscular, instabilidade postural e dor de cabeça",parkinson,tremor nas mãos rigidez instabilidade postural e dor de cabeça,doenca_parkinson
+"articulações rígidas, cansaço constante, fotossensibilidade e perda de apetite",lupus,articulações rígidas cansaço constante fotossensibilidade e inapetência,lupus
+"dor no abdômen, fezes líquidas, perda de peso rápida",doenca_crohn,dor no abdômen diarreia emagrecimento rápida,doenca_crohn
+"cansaco crônica, dor abdominal, tremores, disfunção do fígado",doenca_wilson,cansaço crônica dor abdominal tremores disfunção do fígado,doenca_wilson
+"perda de força nos membros, fala arrastada, espasmos",esclerose_lateral,perda de força nos membros fala arrastada espasmos,esclerose_lateral
+"perda de peso inexplicável, coração acelerado, agitação",hipertireoidismo,emagrecimento inexplicável taquicardia agitação,hipertireoidismo
+"dor muscular difusa, cansaço severo, dificuldades do sono e dor de cabeça",fibromialgia,dor muscular difusa cansaço severo dificuldades do sono e dor de cabeça,fibromialgia
+"cansaço, dispneia aos esforços, tosse, febre baixa e dor de cabeça",sarcoidose,cansaço dispneia aos esforços tosse febre baixa e dor de cabeça,sarcoidose
+"perda de força nos membros, fala arrastada, espasmos e perda de apetite",esclerose_lateral,perda de força nos membros fala arrastada espasmos e inapetência,esclerose_lateral
+"dor na região abdominal, diarreia frequente, fraqueza e dor de cabeça",doenca_crohn,dor na região abdominal diarréia frequente fraqueza e dor de cabeça,doenca_crohn
+"fadiga extrema, dor abdominal, tremores, hepatopatia",doenca_wilson,fadiga extrema dor abdominal tremores hepatopatia,doenca_wilson
+"perda de força muscular, cansaço, problemas visuais, dificuldade de deglutição",miastenia_gravis,perda de força muscular cansaço visão alterada dificuldade de deglutição,miastenia_gravis
+"fadiga severa, obesidade, frieza excessiva",hipotireoidismo,fadiga severa obesidade frieza excessiva,hipotireoidismo
+cansaço constante e severo dores musculares problemas cognitivos,sindrome_fadiga_cronica,cansaço constante e severo dores musculares problemas cognitivos,sindrome_fadiga_cronica
+secura oral olhos ressecados cansaço constante dor articular,sindrome_sjogren,secura oral olhos ressecados cansaço constante dor articular,sindrome_sjogren
+dor articular generalizada fadiga severa erupções cutâneas,lupus,dor articular generalizada fadiga severa erupções cutâneas,lupus
+"dor abdominal forte, náusea constante, vômito, alterações mentais",porfiria,dor abdominal forte náusea constante vômito alterações mentais,porfiria
+"boca ressecada, olhos secos crônicos, cansaco, dor articular",sindrome_sjogren,boca ressecada secura ocular crônicos cansaço dor articular,sindrome_sjogren
+"cansaço que não passa, dor articular, crises álgicas acompanhado de tontura",anemia_falciforme,cansaço que não passa dor articular crises álgicas acompanhado de tontura,anemia_falciforme
+"cansaço constante, dor no abdômen, tremor, problemas hepáticos acompanhado de tontura",doenca_wilson,cansaço constante dor no abdômen tremor problemas hepáticos acompanhado de tontura,doenca_wilson
+"dor no corpo todo, cansaço constante, dificuldade para dormir acompanhado de tontura",fibromialgia,dor no corpo todo cansaço constante insônia acompanhado de tontura,fibromialgia
+"dificuldade para mover os bracos, fala prejudicada, tremores",esclerose_lateral,dificuldade para mover os bracos fala prejudicada tremores,esclerose_lateral

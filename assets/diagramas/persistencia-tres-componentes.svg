@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="440" viewBox="0 0 1100 440">
+<rect x="5" y="5" width="1090" height="430" rx="24" fill="#f8fbff" stroke="#a8c5e7" stroke-width="3"/>
+<text x="550" y="59" text-anchor="middle" font-family="Arial,sans-serif" font-size="31" font-weight="bold" fill="#173b78">O que precisa ser salvo?</text>
+<text x="550" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="18" fill="#375678">Os três objetos trabalham juntos para classificar um novo texto</text>
+<rect x="42.0" y="145" width="324.0" height="168" rx="18" fill="#e6f2ff" stroke="#2377c7" stroke-width="3"/>
+<text x="204.0" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="bold" fill="#173b78">TF-IDF</text>
+<text x="204.0" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">vetorizador.joblib</text>
+<text x="204.0" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">Vocabulário e pesos</text>
+<path d="M 369.0 228 H 385.0 M 379.0 220 L 387.0 228 L 379.0 236" stroke="#3768b5" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="388.0" y="145" width="324.0" height="168" rx="18" fill="#e8f7f1" stroke="#21936a" stroke-width="3"/>
+<text x="550.0" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="bold" fill="#173b78">XGBoost</text>
+<text x="550.0" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">modelo.joblib</text>
+<text x="550.0" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">Árvores treinadas</text>
+<path d="M 715.0 228 H 731.0 M 725.0 220 L 733.0 228 L 725.0 236" stroke="#3768b5" stroke-width="3" fill="none" stroke-linecap="round"/>
+<rect x="734.0" y="145" width="324.0" height="168" rx="18" fill="#fff0df" stroke="#e78b25" stroke-width="3"/>
+<text x="896.0" y="193" text-anchor="middle" font-family="Arial,sans-serif" font-size="21" font-weight="bold" fill="#173b78">LabelEncoder</text>
+<text x="896.0" y="230" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">encoder.joblib</text>
+<text x="896.0" y="257" text-anchor="middle" font-family="Arial,sans-serif" font-size="17" fill="#263e5d">Código → classe</text>
+<text x="550" y="371" text-anchor="middle" font-family="Arial,sans-serif" font-size="19" fill="#173b78">Sem o mesmo vetorizador e encoder, a previsão pode ser interpretada incorretamente.</text>
+</svg>
