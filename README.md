@@ -3,6 +3,10 @@
 **Projeto didático da disciplina Programação para Engenharia Mecânica — DMEC · UFS**  
 **Professor:** Wilson Luciano · **Material didático · Versão 1.0**
 
+<p align="center">
+  <img src="assets/imagens/saudeia-robo.png" alt="SaudeIA — Assistente Inteligente de Saúde" width="360">
+</p>
+
 O **SaudeIA** é uma aplicação educacional em Python que demonstra um fluxo completo de aprendizado de máquina aplicado à classificação de textos: preparação de dados, vetorização **TF-IDF**, treinamento e avaliação com **XGBoost**, persistência do modelo, inferência local, interface web com **FastAPI/Jinja2**, API JSON e interação com um modelo de linguagem por meio da API da OpenAI.
 
 Embora os exemplos utilizem descrições fictícias de sintomas, os conceitos são transferíveis a problemas de Engenharia, como classificação de falhas e análise de registros de manutenção.
@@ -26,14 +30,14 @@ Embora os exemplos utilizem descrições fictícias de sintomas, os conceitos s�
 
 ## 2. Sequência didática
 
-| Aula | Conteúdo                                                  | Arquivo                                                                                                          |
-| ---- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| 00   | Preparação do ambiente e estrutura do projeto             | [`aula-00-preparacao-ambiente-estrutura-projeto-3.md`](aulas/aula-00-preparacao-ambiente-estrutura-projeto-3.md) |
-| 01   | Tratamento e limpeza de dados                             | [`aula-01-tratamento-limpeza-dados.md`](aulas/aula-01-tratamento-limpeza-dados.md)                               |
-| 02   | Vetorização TF-IDF, treinamento e avaliação com XGBoost   | [`aula-02-vetorizacao-tfidf-treinamento-xgboost.md`](aulas/aula-02-vetorizacao-tfidf-treinamento-xgboost.md)     |
-| 03   | Persistência do modelo e previsões                        | [`aula-03-persistencia-modelo-previsoes.md`](aulas/aula-03-persistencia-modelo-previsoes.md)                     |
-| 04   | Aplicação web com FastAPI, API e QR Code                  | [`aula-04-aplicacao-web-fastapi.md`](aulas/aula-04-aplicacao-web-fastapi.md)                                     |
-| 05   | Aperfeiçoamento e finalização: conversa contínua e testes | [`aula-05-aperfeicoamento-finalizacao-saudeia.md`](aulas/aula-05-aperfeicoamento-finalizacao-saudeia.md)         |
+| Aula | Conteúdo | Arquivo |
+|---|---|---|
+| 00 | Preparação do ambiente e estrutura do projeto | [`aula-00-preparacao-ambiente-estrutura-projeto-3.md`](aulas/aula-00-preparacao-ambiente-estrutura-projeto-3.md) |
+| 01 | Tratamento e limpeza de dados | [`aula-01-tratamento-limpeza-dados.md`](aulas/aula-01-tratamento-limpeza-dados.md) |
+| 02 | Vetorização TF-IDF, treinamento e avaliação com XGBoost | [`aula-02-vetorizacao-tfidf-treinamento-xgboost.md`](aulas/aula-02-vetorizacao-tfidf-treinamento-xgboost.md) |
+| 03 | Persistência do modelo e previsões | [`aula-03-persistencia-modelo-previsoes.md`](aulas/aula-03-persistencia-modelo-previsoes.md) |
+| 04 | Aplicação web com FastAPI, API e QR Code | [`aula-04-aplicacao-web-fastapi.md`](aulas/aula-04-aplicacao-web-fastapi.md) |
+| 05 | Aperfeiçoamento e finalização: conversa contínua e testes | [`aula-05-aperfeicoamento-finalizacao-saudeia.md`](aulas/aula-05-aperfeicoamento-finalizacao-saudeia.md) |
 
 As aulas são roteiros práticos para acompanhar a construção do sistema. O repositório também contém a implementação final, permitindo estudar os módulos, executar a aplicação e comparar os resultados.
 
