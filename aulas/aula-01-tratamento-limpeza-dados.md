@@ -282,17 +282,27 @@ if __name__ == "__main__":
   <em>Figura 9 — Dados consistentes ajudam a produzir resultados mais confiáveis; melhorias de acurácia não são garantidas e devem ser verificadas na avaliação.</em>
 </p>
 
-**Importante:** o repositório didático já pode conter `dados/processados/dataset_limpo.csv`. Antes de executar o script, preserve uma cópia desse arquivo, caso queira comparar o resultado:
+**Importante:** o repositório didático já pode conter `dados/processados/dataset_limpo.csv`. Antes de executar o script, você pode preservar uma cópia desse arquivo, caso queira comparar o resultado. **Esta cópia é opcional e não deve ser incluída no commit do Git:**
 
 ```powershell
 Copy-Item .\dados\processados\dataset_limpo.csv .\dados\processados\dataset_limpo_anterior.csv -ErrorAction SilentlyContinue
 ```
 
-Execute:
+Execute a limpeza usando **uma** das opções abaixo. Ambas produzem o mesmo resultado; não é necessário executar as duas.
+
+**Opção 1 — Executar diretamente o arquivo Python (recomendada):**
 
 ```powershell
 python .\services\limpeza_dados.py
 ```
+
+**Opção 2 — Executar como módulo Python:**
+
+```powershell
+python -m services.limpeza_dados
+```
+
+Execute os comandos a partir da raiz `C:\Projetos\SaudeIA`, com o ambiente virtual ativado.
 
 O programa deverá mostrar o relatório de qualidade e salvar o CSV tratado. **Os números exatos devem ser lidos no seu terminal**, pois dependem do conteúdo do arquivo distribuído.
 
@@ -344,13 +354,23 @@ def test_dataset_tratado():
     assert indicadores["registros_finais"] == len(dados)
 ```
 
-Execute na raiz do projeto:
+Execute o comando:
 
 ```powershell
-python -m pytest -q
+python -m pytest tests/test_limpeza_dados.py -v
 ```
 
-**Resultado esperado:** os três testes passam. Se houver erro, leia o nome do teste e a mensagem antes de modificar o código.
+**Resultado esperado:** os três testes passam. A saída será semelhante a:
+
+```text
+tests/test_limpeza_dados.py::test_normalizar_texto PASSED
+tests/test_limpeza_dados.py::test_normalizar_rotulo PASSED
+tests/test_limpeza_dados.py::test_dataset_tratado PASSED
+
+3 passed
+```
+
+Se houver erro, leia o nome do teste e a mensagem antes de modificar o código.
 
 ## 8. Desafio de Engenharia Mecânica
 
@@ -390,7 +410,7 @@ SaudeIA/
     └── test_limpeza_dados.py
 ```
 
-Se estiver utilizando **seu próprio repositório GitHub**, confira as alterações e registre esta etapa:
+Se estiver utilizando **seu próprio repositório GitHub**, confira as alterações e, **somente se houver arquivos modificados**, registre esta etapa. O commit é opcional, pois parte dos arquivos já acompanha o repositório clonado:
 
 ```powershell
 git status

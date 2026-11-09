@@ -104,7 +104,7 @@ def dataset_completo():
     e retorna um DataFrame Pandas pronto para vetorização.
     """
 
-    # Arquivo gerado pelo limpar_excel.py
+    # Arquivo gerado na Aula 01 pelo módulo services/limpeza_dados.py
     raiz_projeto = Path(__file__).resolve().parents[1]
     arquivo = raiz_projeto / "dados" / "processados" / "dataset_limpo.csv"
 
@@ -124,7 +124,7 @@ def dataset_completo():
     return df
 ```
 
-Teste a leitura (o serviço atual não possui execução direta por `-m`):
+Teste a leitura chamando explicitamente a função `dataset_completo()`. Executar apenas `python -m services.datasetService` carrega o módulo, mas não chama essa função automaticamente:
 
 ```powershell
 python -c "from services.datasetService import dataset_completo; df = dataset_completo(); print(df.shape); print(df.columns.tolist())"
@@ -182,7 +182,9 @@ def criar_encoderY(diagnosticos):
     return encoder, y
 ```
 
-Teste as funções com os testes automatizados apresentados na Seção 9. O serviço de vetorização **não possui** bloco `main()` para execução com `python -m services.vetorizacaoService`.
+**Como executar e testar este serviço?** O comando `python -m services.vetorizacaoService` é válido: o Python carrega e executa as instruções do módulo. Entretanto, como este arquivo contém definições de funções e não possui uma rotina principal (`main()`) chamada por `if __name__ == "__main__":`, suas funções **não são executadas automaticamente** e normalmente não aparece resultado no terminal. Isso não significa que o módulo esteja com erro.
+
+Para verificar o funcionamento de `criar_vetorizador()` e `criar_encoderY()`, utilize os **testes automatizados da Seção 9**. Não é necessário acrescentar um `main()` apenas para executar esse serviço.
 
 ### 6.3. Treinamento XGBoost — `services/treinamentoService.py`
 
@@ -360,13 +362,25 @@ def test_vetorizador_nao_usa_fit_no_teste():
     assert "outrapalavra" not in tfidf.get_feature_names_out()
 ```
 
-Execute:
+Execute os testes utilizando **uma das duas opções** abaixo. Ambas verificam o mesmo arquivo de testes; não é necessário executar as duas.
+
+**Opção 1 — Resultado resumido (comando já validado):**
 
 ```powershell
 python -m pytest -q tests/test_treinamentoService.py
 ```
 
-**Resultado esperado:** `3 passed`. Se `pytest` não estiver instalado: `python -m pip install pytest`.
+O parâmetro `-q` (*quiet*) reduz as informações exibidas no terminal e apresenta um resumo objetivo dos resultados.
+
+**Opção 2 — Resultado detalhado:**
+
+```powershell
+python -m pytest tests/test_treinamentoService.py -v
+```
+
+O parâmetro `-v` (*verbose*) mostra o nome e o resultado de cada teste, facilitando a identificação de eventuais falhas, como na Aula 01.
+
+**Resultado esperado:** `3 passed` nas duas opções. Na opção detalhada, os três testes também aparecem individualmente com o status `PASSED`. Se `pytest` não estiver instalado: `python -m pip install pytest`.
 
 ## 10. Atividade prática
 
